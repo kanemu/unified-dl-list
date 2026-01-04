@@ -6,8 +6,22 @@
   "exports": {
     ".": {
       "import": "./index.js"
+    },
+    "./syntax.js": {
+      "import": "./lib/syntax.js"
+    },
+    "./html.js": {
+      "import": "./lib/html.js"
     }
   },
+  "files": [
+    "index.js",
+    "lib/",
+    "README.md",
+    "README-ja.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
   "scripts": {
     "test": "node --test ./test/*.test.js"
   },
@@ -27,5 +41,13 @@
     "commonmark"
   ],
   "author": "Yohei Kanamura",
-  "license": "MIT"
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kanemu/micromark-extension-dl-list.git"
+  },
+  "homepage": "https://github.com/kanemu/micromark-extension-dl-list#readme",
+  "bugs": {
+    "url": "https://github.com/kanemu/micromark-extension-dl-list/issues"
+  }
 }
