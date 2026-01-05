@@ -1,75 +1,70 @@
-import type { ElementContent } from "hast";
-import { h } from "hastscript";
-import type { Handler } from "mdast-util-to-hast";
-import type { DlListHandlerOptions } from "./types.js";
+import { h } from 'hastscript'
+import type { Handlers } from 'mdast-util-to-hast'
+import type { HastState, MdastNode, HastElement } from './types'
 
-function isElement(node: unknown): node is { type: "element"; tagName: string; children?: unknown } {
-    return !!node && typeof node === "object" && (node as any).type === "element";
+/**
+ * Create a <dl> element from a definitionList mdast node.
+ */
+function createDl(state: HastState, node: MdastNode): HastElement {
+    const children = state.all(node as any) as any[]
+    const dl = h('dl', children) as HastElement
+    state.applyData(node as any, dl)
+    return dl
 }
 
 /**
- * If the content is wrapped in a single <p>, unwrap it.
- *
- * mdast-util-to-hast often emits:
- *   <dt><p>…</p></dt>
- *   <dd><p>…</p></dd>
- * for terms/descriptions that are a single mdast paragraph.
+ * definitionItem itself does not map to an HTML element.
+ * It expands to dt + dd elements.
  */
-function unwrapSingleParagraph(children: ElementContent[]): ElementContent[] {
-    if (children.length !== 1) return children;
-    const only = children[0];
-    if (!isElement(only) || (only as any).tagName !== "p") return children;
-    return ((only as any).children ?? []) as ElementContent[];
+function createDlItem(state: HastState, node: MdastNode): HastElement[] {
+    return state.all(node as any) as HastElement[]
 }
 
 /**
- * Handlers for mdast-util-to-hast.
- *
- * - definitionList -> <dl>
- * - definitionTerm -> <dt>
- * - definitionDescription -> <dd>
- *
- * `definitionItem` is treated as a transparent wrapper by default.
+ * Create a <dt> element.
  */
-export function dlListHandlers(options: DlListHandlerOptions = {}): Record<string, Handler> {
-    const unwrapItem = options.unwrapItem ?? true;
+function createDt(state: HastState, node: MdastNode): HastElement {
+    const children = state.all(node as any) as any[]
+    const dt = h('dt', children) as HastElement
+    state.applyData(node as any, dt)
+    return dt
+}
 
-    const handlers: Record<string, Handler> = {
-        definitionList(state, node) {
-            const children = state.all(node) as unknown as ElementContent[];
-            const el = h("dl", children) as any;
-            // Apply node.data.hProperties / hName / hChildren etc.
-            state.applyData(node, el);
-            return el;
+/**
+ * Create a <dd> element.
+ *
+ * mdast-util-dl-list may unwrap a single paragraph into phrasing children:
+ * - phrasing-only children -> <dd>desc</dd>
+ * - block children (paragraph/list/...) -> <dd><p>...</p>...</dd>
+ */
+function createDd(state: HastState, node: MdastNode): HastElement {
+    const children = state.all(node as any) as any[]
+    const dd = h('dd', children) as HastElement
+    state.applyData(node as any, dd)
+    return dd
+}
+
+/**
+ * Handlers for mdast definition list nodes.
+ *
+ * These handlers are meant to be passed to `mdast-util-to-hast` / `remark-rehype`.
+ */
+export function dlListHandlers(): Handlers {
+    return {
+        definitionList(state: HastState, node: MdastNode) {
+            return createDl(state, node)
         },
 
-        definitionItem(state, node) {
-            const children = state.all(node) as unknown as ElementContent[];
-
-            // If you unwrap the item, there is no single element to applyData onto.
-            // So data on definitionItem cannot be reflected in HTML in this mode.
-            if (unwrapItem) return children as any;
-
-            // Wrapper element when not unwrapping
-            const el = h("div", children) as any;
-            state.applyData(node, el);
-            return el;
+        definitionItem(state: HastState, node: MdastNode) {
+            return createDlItem(state, node)
         },
 
-        definitionTerm(state, node) {
-            const children = unwrapSingleParagraph(state.all(node) as unknown as ElementContent[]);
-            const el = h("dt", children) as any;
-            state.applyData(node, el);
-            return el;
+        definitionTerm(state: HastState, node: MdastNode) {
+            return createDt(state, node)
         },
 
-        definitionDescription(state, node) {
-            const children = unwrapSingleParagraph(state.all(node) as unknown as ElementContent[]);
-            const el = h("dd", children) as any;
-            state.applyData(node, el);
-            return el;
+        definitionDescription(state: HastState, node: MdastNode) {
+            return createDd(state, node)
         }
-    };
-
-    return handlers;
+    } as unknown as Handlers
 }

@@ -1,0 +1,67 @@
+{
+    "name": "remark-dl-list",
+    "version": "0.1.0",
+    "description": "A remark plugin that enables colon-based definition lists by wiring micromark and mdast extensions for <dl>, <dt>, and <dd>.",
+    "type": "module",
+    "license": "MIT",
+    "author": "Yohei Kanamura",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/kanemu/unified-dl-list",
+        "directory": "packages/remark-dl-list"
+    },
+    "homepage": "https://github.com/kanemu/unified-dl-list/tree/main/packages/remark-dl-list",
+    "bugs": {
+        "url": "https://github.com/kanemu/unified-dl-list/issues"
+    },
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.js"
+        }
+    },
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "files": [
+        "dist/**",
+        "README.md",
+        "LICENSE"
+    ],
+    "scripts": {
+        "build": "tsup",
+        "clean": "rimraf dist",
+        "prepack": "pnpm build",
+        "test": "pnpm build && node --test ./test/*.test.js",
+        "typecheck": "tsc -p tsconfig.json --noEmit"
+    },
+    "dependencies": {
+        "mdast-util-dl-list": "^0.1.0",
+        "micromark-extension-dl-list": "^0.1.0"
+    },
+    "peerDependencies": {
+        "unified": "^11.0.5"
+    },
+    "devDependencies": {
+        "@types/mdast": "^4.0.4",
+        "@types/unist": "^3.0.3",
+        "mdast-util-from-markdown": "^2.0.2",
+        "mdast-util-to-markdown": "^2.1.2",
+        "micromark-util-types": "^2.0.2",
+        "remark-parse": "^11.0.0",
+        "remark-stringify": "^11.0.0",
+        "rimraf": "^6.1.2",
+        "tsup": "^8.5.1",
+        "typescript": "^5.4.0",
+        "unified": "^11.0.5"
+    },
+    "keywords": [
+        "unified",
+        "remark",
+        "remark-plugin",
+        "markdown",
+        "definition-list",
+        "dl",
+        "dt",
+        "dd"
+    ]
+}

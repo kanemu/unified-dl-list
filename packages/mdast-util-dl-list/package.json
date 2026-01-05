@@ -1,31 +1,60 @@
 {
     "name": "mdast-util-dl-list",
     "version": "0.1.0",
+    "description": "mdast utilities only for colon-based definition lists: mdast node generation and markdown serialization support for <dl>, <dt>, and <dd>.",
     "type": "module",
     "license": "MIT",
+    "author": "Yohei Kanamura",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/kanemu/unified-dl-list",
+        "directory": "packages/mdast-util-dl-list"
+    },
+    "homepage": "https://github.com/kanemu/unified-dl-list/tree/main/packages/mdast-util-dl-list",
+    "bugs": {
+        "url": "https://github.com/kanemu/unified-dl-list/issues"
+    },
     "exports": {
         ".": {
-            "types": "./lib/index.d.ts",
-            "default": "./lib/index.js"
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.js"
         }
     },
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
     "files": [
-        "lib/"
+        "dist/**",
+        "README.md",
+        "LICENSE"
     ],
     "scripts": {
-        "build": "tsc -p tsconfig.json",
-        "clean": "rimraf lib",
+        "build": "tsup",
+        "clean": "rimraf dist",
         "prepack": "pnpm build",
         "test": "pnpm build && node --test ./test/*.test.js",
         "typecheck": "tsc -p tsconfig.json --noEmit"
     },
     "dependencies": {
         "mdast-util-from-markdown": "^2.0.2",
-        "micromark-extension-dl-list": "workspace:*"
+        "mdast-util-to-markdown": "^2.1.2",
+        "micromark-extension-dl-list": "^0.1.0"
     },
     "devDependencies": {
         "@types/mdast": "^4.0.4",
-        "rimraf": "^6.0.0",
+        "@types/unist": "^3.0.3",
+        "rimraf": "^6.1.2",
+        "tsup": "^8.5.1",
         "typescript": "^5.4.0"
-    }
+    },
+    "keywords": [
+        "unified",
+        "remark",
+        "mdast",
+        "mdast-util",
+        "markdown",
+        "definition-list",
+        "dl",
+        "dt",
+        "dd"
+    ]
 }

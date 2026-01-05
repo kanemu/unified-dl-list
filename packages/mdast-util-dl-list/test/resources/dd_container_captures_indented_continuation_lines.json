@@ -1,0 +1,33 @@
+{
+    "type": "root",
+    "children": [
+        {
+            "type": "definitionList",
+            "children": [
+                {
+                    "type": "definitionItem",
+                    "children": [
+                        {
+                            "type": "definitionTerm",
+                            "children": [
+                                {
+                                    "type": "text",
+                                    "value": "term"
+                                }
+                            ]
+                        },
+                        {
+                            "type": "definitionDescription",
+                            "children": [
+                                {
+                                    "type": "text",
+                                    "value": "first line\nsecond line"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

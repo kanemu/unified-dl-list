@@ -1,26 +1,34 @@
 {
   "name": "micromark-extension-dl-list",
   "version": "0.1.0",
-  "description": "A micromark extension that adds CommonMark-compatible definition list (dl/dt/dd) support using colon-based syntax.",
+  "description": "A micromark extension that adds colon-based definition list (<dl>, <dt>, <dd>) support with CommonMark-compatible parsing rules.",
   "type": "module",
+  "sideEffects": false,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kanemu/unified-dl-list",
+    "directory": "packages/micromark-extension-dl-list"
+  },
+  "homepage": "https://github.com/kanemu/unified-dl-list/tree/main/packages/micromark-extension-dl-list",
+  "bugs": {
+    "url": "https://github.com/kanemu/unified-dl-list/issues"
+  },
   "exports": {
     ".": {
-      "types": "./index.d.ts",
-      "import": "./index.js"
+      "types": "./src/index.d.ts",
+      "import": "./src/index.js"
     },
     "./syntax.js": {
-      "import": "./lib/syntax.js"
+      "import": "./src/syntax.js"
     },
     "./html.js": {
-      "import": "./lib/html.js"
+      "import": "./src/html.js"
     }
   },
   "files": [
-    "index.js",
-    "lib/",
+    "src/**/*.js",
+    "src/**/*.d.ts",
     "README.md",
-    "README-ja.md",
-    "CHANGELOG.md",
     "LICENSE"
   ],
   "scripts": {

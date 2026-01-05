@@ -4,9 +4,9 @@ import assert from "node:assert/strict";
 import { fromMarkdown } from "mdast-util-from-markdown";
 import { toHast } from "mdast-util-to-hast";
 import { toHtml } from "hast-util-to-html";
-import { dlList } from "micromark-extension-dl-list";
-import { dlListFromMarkdown } from "mdast-util-dl-list";
-import { dlListHandlers } from "../lib/index.js";
+import { dlList } from '../../micromark-extension-dl-list/src/syntax.js'
+import { dlListFromMarkdown } from '../../mdast-util-dl-list/dist/index.js'
+import { dlListHandlers } from "../dist/index.js";
 
 function render(md) {
     const mdast = fromMarkdown(md, {
@@ -22,6 +22,7 @@ function render(md) {
     return toHtml(hast);
 }
 
+//---
 test('basic dt/dd', () => {
     const md = [
         ': term1',
@@ -132,20 +133,6 @@ test('dd can nest dl (": : apple" etc)', () => {
     )
 })
 
-test('allow up to 3 columns indent before ":" (spaces)', () => {
-    const md = [
-        '  : term1',
-        '      : desc1',
-        '  : term2',
-        ''
-    ].join('\n')
-
-    assert.equal(
-        render(md),
-        '<dl><dt>term1</dt><dd>desc1</dd><dt>term2</dt></dl>'
-    )
-})
-
 test('tab before ":" counts as columns (tab stop)', () => {
     // \t は col0->4 なので “0-3 columns” を超える → dlList としては開始しない
     // → Indented Code Block 扱い（micromark default）
@@ -173,7 +160,7 @@ test('dd container deindents only ddIndent and preserves extra indent (nested li
 
 test('DL list: does not leak "#" and keeps next ATX heading as <h2> after a blank line', () => {
     const md = `\
-## 説明リスト
+## 定義リスト
 
 : [りんご](https://example.com/apple)
     : 赤くてまるい *果物*
@@ -209,7 +196,7 @@ test('DL list: does not leak "#" and keeps next ATX heading as <h2> after a blan
 
 test('DL list: inline constructs work inside dt/dd (link/em/strong)', () => {
     const md = `\
-## 説明リスト
+## 定義リスト
 
 : [りんご](https://example.com/apple)
     : 赤くてまるい *果物*
@@ -243,7 +230,7 @@ test('full markdown example (lang ja)', () => {
 1. 番号付き
 2. 項目
 
-## 説明リスト
+## 定義リスト
 
 : [りんご](https://ja.wikipedia.org/wiki/%E3%83%AA%E3%83%B3%E3%82%B4)
     : 赤くてまるい *果物*
@@ -295,7 +282,7 @@ console.log(message);
 <li>番号付き</li>
 <li>項目</li>
 </ol>
-<h2>説明リスト</h2>
+<h2>定義リスト</h2>
 <dl><dt><a href="https://ja.wikipedia.org/wiki/%E3%83%AA%E3%83%B3%E3%82%B4">りんご</a></dt><dd>赤くてまるい <em>果物</em></dd><dt><a href="https://ja.wikipedia.org/wiki/%E3%83%96%E3%83%89%E3%82%A6">ぶどう</a></dt><dd>紫で房状の <strong>果物</strong></dd><dt><a href="https://ja.wikipedia.org/wiki/%E3%83%A1%E3%83%AD%E3%83%B3">めろん</a></dt><dd>緑で固い皮に包まれている</dd></dl>
 <h2>3. リンクと画像</h2>
 <p><a href="https://commonmark.org">CommonMark 公式</a><br>

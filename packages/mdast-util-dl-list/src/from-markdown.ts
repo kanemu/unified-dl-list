@@ -1,239 +1,244 @@
-import { fromMarkdown, type CompileContext, type Extension, type Token } from "mdast-util-from-markdown";
-import { dlList } from "micromark-extension-dl-list";
-import type {
-    DlListFromMarkdownOptions,
-    DefinitionDescription,
-    DefinitionItem,
-    DefinitionList,
-    DefinitionTerm
-} from "./types.js";
+import { fromMarkdown, type CompileContext, type Extension, type Token } from 'mdast-util-from-markdown'
+import { dlList } from '../../micromark-extension-dl-list/src'
+import type { DlListFromMarkdownOptions } from './types'
+import type { RootContent, PhrasingContent } from 'mdast'
 
 /**
- * Tab width used for column calculation (match html.js).
- * CommonMark/micromark treat a tab stop as 4 columns in indentation contexts.
- */
-const TAB_SIZE = 4;
-
-/**
- * mdast extension for parsing definition lists.
+ * mdast extension for dl-list.
  *
- * Converts micromark `dlList` tokens into mdast nodes:
+ * Current micromark token model (2026-01):
+ * - dt inline text comes from `dlTermText` (plus `dlHardBreak` for continuation newline)
+ * - dd content is stored in `dlDescContainer` (a flow chunk), which is re-parsed as Markdown
+ * - dd does NOT use `dlDescText`
  *
- * - definitionList
- *   - definitionItem
- *     - definitionTerm
- *     - definitionDescription
+ * Behavior alignment with micromark-extension-dl-list/html.js:
+ * - dd container is deindented by `_dlIndent` columns
+ * - normalize list-indent and nested-dl-indent inside dd container
+ * - if container parses to a single paragraph, unwrap to phrasing directly under dd
  */
 export function dlListFromMarkdown(options: DlListFromMarkdownOptions = {}): Extension {
-    const maxDepth = options.maxDepth ?? 8;
+    const maxDepth = options.maxDepth ?? 8
 
     return {
         enter: {
             dlList(this: CompileContext, token: Token) {
-                const node: DefinitionList = { type: "definitionList", children: [] };
-                this.enter(node as any, token);
+                this.enter({ type: 'definitionList', children: [] } as any, token)
             },
 
             dlItem(this: CompileContext, token: Token) {
-                const node: DefinitionItem = { type: "definitionItem", children: [] };
-                this.enter(node as any, token);
+                this.enter({ type: 'definitionItem', children: [] } as any, token)
             },
 
             dlTerm(this: CompileContext, token: Token) {
-                const node: DefinitionTerm = { type: "definitionTerm", children: [] };
-                (node as any)._dlRaw = "";
-                this.enter(node as any, token);
+                // We collect dt raw as text and parse once at exit (so micromark hard-breaks become '\n').
+                this.enter({ type: 'definitionTerm', children: [], _dlRaw: '' } as any, token)
             },
 
             dlDesc(this: CompileContext, token: Token) {
-                const node: DefinitionDescription = { type: "definitionDescription", children: [] };
-                (node as any)._dlRaw = "";
-                this.enter(node as any, token);
+                this.enter({ type: 'definitionDescription', children: [] } as any, token)
             },
 
-            // newline inside dt/dd (continuation)
+            // continuation newline inside dt (tokenizer emits dlHardBreak)
             dlHardBreak(this: CompileContext) {
-                const n = peekTop(this);
-                if (n && (n.type === "definitionTerm" || n.type === "definitionDescription")) {
-                    (n as any)._dlRaw = ((n as any)._dlRaw ?? "") + "\n";
+                const dt = peekTop(this)
+                if (dt?.type === 'definitionTerm') {
+                    dt._dlRaw += '\n'
                 }
             }
         },
 
         exit: {
+            // dt inline text (we keep it as raw; parse at dt exit)
             dlTermText(this: CompileContext, token: Token) {
-                const n = peekTop(this);
-                if (n?.type !== "definitionTerm") return;
-                (n as any)._dlRaw = ((n as any)._dlRaw ?? "") + this.sliceSerialize(token);
+                const dt = peekTop(this)
+                if (dt?.type === 'definitionTerm') {
+                    dt._dlRaw += this.sliceSerialize(token)
+                }
             },
 
-            dlDescText(this: CompileContext, token: Token) {
-                const n = peekTop(this);
-                if (n?.type !== "definitionDescription") return;
-                (n as any)._dlRaw = ((n as any)._dlRaw ?? "") + this.sliceSerialize(token);
-            },
-
+            // dd body (flow chunk) — main path in current tokenizer
             dlDescContainer(this: CompileContext, token: Token) {
-                if (maxDepth <= 0) return;
+                if (maxDepth <= 0) return
 
-                const n = peekTop(this);
-                if (n?.type !== "definitionDescription") return;
+                const dd = peekTop(this)
+                if (dd?.type !== 'definitionDescription') return
 
-                // flush inline text before inserting blocks
-                flushInlineIntoDescription(n);
+                let raw = this.sliceSerialize(token)
+                const indentCols = (token as any)._dlIndent ?? 0
 
-                let raw = this.sliceSerialize(token);
-                const indentCols = (token as any)._dlIndent ?? 0;
+                raw = deindentByColumns(raw, indentCols)
+                raw = normalizeFlatListIndentInDd(raw)
+                raw = normalizeNestedDlIndentInDd(raw)
 
-                // mirror html.js order: deindent -> normalize
-                raw = deindentByColumns(raw, indentCols);
-                raw = normalizeFlatListIndentInDd(raw);
-
-                const root = fromMarkdown(raw, {
+                const tree = fromMarkdown(raw, {
                     extensions: [dlList()],
                     mdastExtensions: [dlListFromMarkdown({ maxDepth: maxDepth - 1 })]
-                });
+                })
 
-                n.children.push(...(root.children as any[]));
+                const children = (tree.children ?? []) as RootContent[]
+
+                // Align with HTML: unwrap single <p> into phrasing directly under dd.
+                if (children.length === 1 && children[0]?.type === 'paragraph') {
+                    dd.children.push(...(((children[0] as any).children ?? []) as PhrasingContent[]))
+                } else {
+                    dd.children.push(...children)
+                }
             },
 
             dlTerm(this: CompileContext, token: Token) {
-                const term = peekTop(this) as any;
-                if (term?.type === "definitionTerm") {
-                    const raw = String(term._dlRaw ?? "");
-                    term.children = parseInlineToPhrasing(raw);
-                    delete term._dlRaw;
+                const dt = peekTop(this)
+                if (dt?.type === 'definitionTerm') {
+                    const raw: string = String(dt._dlRaw ?? '').trimEnd()
+                    dt.children = parseInlineToPhrasing(raw)
+                    delete dt._dlRaw
                 }
-                this.exit(token);
+                this.exit(token)
             },
 
             dlDesc(this: CompileContext, token: Token) {
-                const desc = peekTop(this) as any;
-                if (desc?.type === "definitionDescription") {
-                    flushInlineIntoDescription(desc);
-                    delete desc._dlRaw;
-                }
-                this.exit(token);
+                // dd children are built by dlDescContainer; nothing to finalize here.
+                this.exit(token)
             },
 
             dlItem(this: CompileContext, token: Token) {
-                this.exit(token);
+                this.exit(token)
             },
 
             dlList(this: CompileContext, token: Token) {
-                this.exit(token);
+                this.exit(token)
             }
         }
-    };
+    }
 }
 
 function peekTop(ctx: CompileContext): any | undefined {
-    const stack = (ctx as any).stack as any[] | undefined;
-    if (!stack || stack.length === 0) return;
-    return stack[stack.length - 1];
-}
-
-function parseInlineToPhrasing(raw: string): any[] {
-    const t = raw.trimEnd();
-    if (!t) return [];
-    const tree = fromMarkdown(t);
-    const first = tree.children && tree.children[0];
-    if (first && first.type === "paragraph") return first.children || [];
-    return tree.children || [];
-}
-
-function flushInlineIntoDescription(desc: any) {
-    const raw = String(desc._dlRaw ?? "").replace(/\r\n/g, "\n");
-    const phrasing = parseInlineToPhrasing(raw);
-    if (phrasing.length === 0) return;
-
-    // IMPORTANT:
-    // Match html.js output: dd inline content is NOT wrapped in <p>.
-    // Store phrasing nodes directly under definitionDescription.
-    desc.children.push(...phrasing);
-
-    desc._dlRaw = "";
+    const stack = (ctx as any).stack as any[] | undefined
+    if (!stack || stack.length === 0) return
+    return stack[stack.length - 1]
 }
 
 /**
- * Deindent each line by given “column” count.
- * Mirrors html.js deindentByColumns (tab stop = 4, cannot split a tab).
+ * Parse inline markdown into phrasing children.
+ * We parse as a tiny document and unwrap a single paragraph if present.
  */
-function deindentByColumns(raw: string, cols: number): string {
-    if (!cols) return raw;
+function parseInlineToPhrasing(raw: string): PhrasingContent[] {
+    const t = raw.trimEnd()
+    if (!t) return []
+    const tree = fromMarkdown(t)
+    const first = tree.children?.[0]
+    if (first?.type === 'paragraph') return (first.children ?? []) as PhrasingContent[]
+    return (tree.children ?? []) as any
+}
 
-    const text = raw.replace(/\r\n?/g, "\n");
-    const lines = text.split("\n");
+// ---- dd container normalization (must match micromark-extension-dl-list/html.js) ----
+
+const TAB_SIZE = 4
+
+function deindentByColumns(raw: string, cols: number): string {
+    if (!cols) return raw
+    const text = raw.replace(/\r\n?/g, '\n')
+    const lines = text.split('\n')
 
     return lines
         .map((line) => {
-            let col = 0;
-            let i = 0;
+            let col = 0
+            let i = 0
 
             while (i < line.length && col < cols) {
-                const ch = line.charCodeAt(i);
+                const ch = line.charCodeAt(i)
 
                 // space
                 if (ch === 0x20) {
-                    col += 1;
-                    i += 1;
-                    continue;
+                    col += 1
+                    i += 1
+                    continue
                 }
 
-                // tab (tab stop = 4). Cannot split a tab.
+                // tab (tab stop = 4)
                 if (ch === 0x09) {
-                    const r = col % TAB_SIZE;
-                    const step = r === 0 ? TAB_SIZE : TAB_SIZE - r;
-                    if (col + step > cols) break;
-                    col += step;
-                    i += 1;
-                    continue;
+                    const r = col % TAB_SIZE
+                    const step = r === 0 ? TAB_SIZE : TAB_SIZE - r
+                    // cannot split a tab; if it would cross boundary, keep it
+                    if (col + step > cols) break
+                    col += step
+                    i += 1
+                    continue
                 }
 
-                break;
+                break
             }
 
-            return line.slice(i);
+            return line.slice(i)
         })
-        .join("\n");
+        .join('\n')
 }
 
 function isListMarkerLine(line: string): boolean {
-    // Match html.js list marker detection:
-    // - "-", "*"
-    // - "1." (and other digits)
-    return /^([-*]|\d+\.)\s/.test(line);
+    return /^([-*]|\d+\.)\s/.test(line)
 }
 
 /**
- * Normalize indentation inside dd so that "flat lists" don't accidentally become nested.
- * Mirrors html.js strategy:
- * If the container starts with a list marker at column 0,
+ * If a dd container starts with a list marker at column 0,
  * outdent subsequent list-marker lines that start with exactly 2 spaces.
  */
-function normalizeFlatListIndentInDd(s: string): string {
-    const text = s.replace(/\r\n?/g, "\n");
-    const lines = text.split("\n");
+function normalizeFlatListIndentInDd(raw: string): string {
+    const text = raw.replace(/\r\n?/g, '\n')
+    const lines = text.split('\n')
 
-    // Find first non-empty line
-    let firstIdx = -1;
+    let firstIdx = -1
     for (let i = 0; i < lines.length; i++) {
-        if (lines[i].trim() !== "") {
-            firstIdx = i;
-            break;
+        if (lines[i].trim() !== '') {
+            firstIdx = i
+            break
         }
     }
-    if (firstIdx === -1) return s;
+    if (firstIdx === -1) return raw
 
-    const first = lines[firstIdx];
-    if (!isListMarkerLine(first)) return s;
+    const first = lines[firstIdx]
+    if (!isListMarkerLine(first)) return raw
 
     for (let i = firstIdx + 1; i < lines.length; i++) {
-        const line = lines[i];
-        if (line.startsWith("  ") && isListMarkerLine(line.slice(2))) {
-            lines[i] = line.slice(2);
+        const line = lines[i]
+        if (line.startsWith('  ') && isListMarkerLine(line.slice(2))) {
+            lines[i] = line.slice(2)
         }
     }
 
-    return lines.join("\n");
+    return lines.join('\n')
+}
+
+/**
+ * If a dd container starts with ":" at column 0,
+ * normalize subsequent ":" lines that were indented by +2 spaces for visual alignment.
+ * Remove exactly 2 leading spaces when it turns the indent into a multiple of 4.
+ */
+function normalizeNestedDlIndentInDd(raw: string): string {
+    const text = raw.replace(/\r\n?/g, '\n')
+    const lines = text.split('\n')
+
+    let firstIdx = -1
+    for (let i = 0; i < lines.length; i++) {
+        if (lines[i].trim() !== '') {
+            firstIdx = i
+            break
+        }
+    }
+    if (firstIdx === -1) return raw
+    if (!lines[firstIdx].startsWith(':')) return raw
+
+    for (let i = firstIdx + 1; i < lines.length; i++) {
+        const line = lines[i]
+        if (!line.startsWith('  ')) continue
+
+        // count leading spaces
+        let n = 0
+        while (n < line.length && line.charCodeAt(n) === 0x20) n++
+
+        // first non-space is ":" and (n-2) is multiple of 4 -> drop 2 spaces
+        if (n >= 2 && line.charCodeAt(n) === 0x3a /* : */ && (n - 2) % 4 === 0) {
+            lines[i] = line.slice(2)
+        }
+    }
+
+    return lines.join('\n')
 }

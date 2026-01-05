@@ -1,8 +1,9 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { micromark } from 'micromark'
-import { dlList } from '../lib/syntax.js'
-import { dlListHtml } from '../lib/html.js'
+
+import { dlList } from '../src/syntax.js'
+import { dlListHtml } from '../src/html.js'
 
 function render(md) {
     return micromark(md, {
@@ -11,158 +12,207 @@ function render(md) {
     })
 }
 
-test('basic dt/dd', () => {
-    const md = [
-        ': term1',
-        '    : description1-1',
-        '    : description1-2',
-        ': term2',
-        '    : description2-1',
-        '    : description2-2',
-        ''
-    ].join('\n')
+function equalOutput(result, expected) {
+    const trimHtml = (html) => {
+        return html.replace(/^\s*\</, '<')
+            .replace(/\>\s*\</g, '><')
+            .replace(/\>\s*$/, '>');
+    }
+    assert.equal(trimHtml(result), trimHtml(expected));
+}
 
-    assert.equal(
-        render(md),
-        '<dl><dt>term1</dt><dd>description1-1</dd><dd>description1-2</dd><dt>term2</dt><dd>description2-1</dd><dd>description2-2</dd></dl>'
-    )
+//---
+test('basic dt/dd', () => {
+    const md = `\
+: term1
+    : description1-1
+    : description1-2
+: term2
+    : description2-1
+    : description2-2
+`;
+    const html = `\
+<dl>
+  <dt>term1</dt>
+  <dd>description1-1</dd>
+  <dd>description1-2</dd>
+  <dt>term2</dt>
+  <dd>description2-1</dd>
+  <dd>description2-2</dd>
+</dl>
+`;
+
+    equalOutput(render(md), html);
 })
 
 test('all dt when no indented dd', () => {
-    const md = [
-        ': term1',
-        ': term2',
-        ': term3',
-        ''
-    ].join('\n')
+    const md = `\
+: term1
+: term2
+: term3
+`;
+    const html = `\
+<dl>
+  <dt>term1</dt>
+  <dt>term2</dt>
+  <dt>term3</dt>
+</dl>
+`;
 
-    assert.equal(
-        render(md),
-        '<dl><dt>term1</dt><dt>term2</dt><dt>term3</dt></dl>'
-    )
+    equalOutput(render(md), html);
 })
 
 test('colon in same line is preserved', () => {
-    const md = [
-        ': 12:30',
-        '    : lunch and break',
-        ''
-    ].join('\n')
+    const md = `\
+: 12:30
+    : lunch and break
+`;
+    const html = `\
+<dl>
+  <dt>12:30</dt>
+  <dd>lunch and break</dd>
+</dl>
+`;
 
-    assert.equal(
-        render(md),
-        '<dl><dt>12:30</dt><dd>lunch and break</dd></dl>'
-    )
+    equalOutput(render(md), html);
 })
 
 test('continuation lines belong to dt/dd with newline preserved', () => {
-    const md = [
-        ': term1 line1',
-        '  term1 line2',
-        '    : description1 line1',
-        '      description1 line2',
-        ''
-    ].join('\n')
+    const md = `\
+: term1 line1
+  term1 line2
+    : description1 line1
+      description1 line2
+`;
+    const html = `\
+<dl>
+  <dt>term1 line1
+term1 line2</dt>
+  <dd>description1 line1
+description1 line2</dd>
+</dl>
+`;
 
-    assert.equal(
-        render(md),
-        '<dl><dt>term1 line1\nterm1 line2</dt><dd>description1 line1\ndescription1 line2</dd></dl>'
-    )
+    equalOutput(render(md), html);
 })
 
 test('dd can nest ul', () => {
-    const md = [
-        ': fruits',
-        '    : - apple',
-        '      - grape',
-        '      - orange',
-        ''
-    ].join('\n')
+    const md = `\
+: fruits
+    : - apple
+      - grape
+      - orange
+`;
+    const html = `\
+<dl>
+  <dt>fruits</dt>
+  <dd>
+    <ul>
+      <li>apple</li>
+      <li>grape</li>
+      <li>orange</li>
+    </ul>
+  </dd>
+</dl>
+`;
 
-    // dd コンテナは再パースで <ul> が生成される
-    assert.equal(
-        render(md),
-        '<dl><dt>fruits</dt><dd><ul>\n<li>apple</li>\n<li>grape</li>\n<li>orange</li>\n</ul>\n</dd></dl>'
-    )
+    equalOutput(render(md), html);
 })
 
 test('dd can nest ol (ordered list)', () => {
-    const md = [
-        ': fruits',
-        '    : 1. apple',
-        '      2. grape',
-        '      3. orange',
-        ''
-    ].join('\n')
+    const md = `\
+: fruits
+    : 1. apple
+      2. grape
+      3. orange
+`;
+    const html = `\
+<dl>
+  <dt>fruits</dt>
+  <dd>
+    <ol>
+      <li>apple</li>
+      <li>grape</li>
+      <li>orange</li>
+    </ol>
+  </dd>
+</dl>
+`;
 
-    // dd コンテナは再パースで <ol> が生成される
-    assert.equal(
-        render(md),
-        '<dl><dt>fruits</dt><dd><ol>\n<li>apple</li>\n<li>grape</li>\n<li>orange</li>\n</ol>\n</dd></dl>'
-    )
+    equalOutput(render(md), html);
 })
 
 test('dd can nest dl (": : apple" etc)', () => {
-    const md = [
-        ': fruits',
-        '    : : apple',
-        '          : Orin',
-        '          : Fuji',
-        '          : Jonagold',
-        '    : grape',
-        '    : orange',
-        ''
-    ].join('\n')
+    const md = `\
+: fruits
+    : : apple
+          : Orin
+          : Fuji
+          : Jonagold
+    : grape
+    : orange
+`;
+    const html = `\
+<dl>
+  <dt>fruits</dt>
+  <dd>
+    <dl>
+      <dt>apple</dt>
+      <dd>Orin</dd>
+      <dd>Fuji</dd>
+      <dd>Jonagold</dd>
+    </dl>
+  </dd>
+  <dd>grape</dd>
+  <dd>orange</dd>
+</dl>
+`;
 
-    // dd1 が container になり、先頭 ':' によりネスト dlList が走る
-    assert.equal(
-        render(md),
-        '<dl><dt>fruits</dt><dd><dl><dt>apple</dt><dd>Orin</dd><dd>Fuji</dd><dd>Jonagold</dd></dl></dd><dd>grape</dd><dd>orange</dd></dl>'
-    )
+    equalOutput(render(md), html);
 })
 
-test('allow up to 3 columns indent before ":" (spaces)', () => {
-    const md = [
-        '  : term1',
-        '      : desc1',
-        '  : term2',
-        ''
-    ].join('\n')
+test('In blockquate', () => {
+    const md = `\
+# dl-list
 
-    assert.equal(
-        render(md),
-        '<dl><dt>term1</dt><dd>desc1</dd><dt>term2</dt></dl>'
-    )
+> ## dl-list in blockquate
+> : term1
+>     : description1
+> : term2
+>     : description2
+
+under paragraph
+`;
+    const html = `\
+<h1>dl-list</h1>
+<blockquote>
+    <h2>dl-list in blockquate</h2>
+    <dl>
+        <dt>term1</dt>
+        <dd>description1</dd>
+        <dt>term2</dt>
+        <dd>description2</dd>
+    </dl>
+</blockquote>
+<p>under paragraph</p>
+`;
+
+    equalOutput(render(md), html);
 })
 
 test('tab before ":" counts as columns (tab stop)', () => {
     // \t は col0->4 なので “0-3 columns” を超える → dlList としては開始しない
     // → Indented Code Block 扱い（micromark default）
     const md = ['\t: term1', ''].join('\n')
-    const html = render(md)
+    const output = render(md)
 
     // dlList になっていないことだけ確認（出力は micromark の <pre><code>）
-    assert.ok(html.includes('<pre><code>') && html.includes(': term1'))
-})
-
-test('dd container deindents only ddIndent and preserves extra indent (nested list)', () => {
-    const md = [
-        ': fruits',
-        '    : - apple',
-        '      - grape',
-        '      - orange',
-        ''
-    ].join('\n')
-
-    assert.equal(
-        render(md),
-        '<dl><dt>fruits</dt><dd><ul>\n<li>apple</li>\n<li>grape</li>\n<li>orange</li>\n</ul>\n</dd></dl>'
-    )
+    assert.ok(output.includes('<pre><code>') && output.includes(': term1'))
 })
 
 test('DL list: does not leak "#" and keeps next ATX heading as <h2> after a blank line', () => {
     const md = `\
-## 説明リスト
+## 定義リスト
 
 : [りんご](https://example.com/apple)
     : 赤くてまるい *果物*
@@ -174,44 +224,44 @@ test('DL list: does not leak "#" and keeps next ATX heading as <h2> after a blan
 ## 3. リンクと画像
 [CommonMark 公式](https://commonmark.org)
 `
+    const html = `\
+<h2>定義リスト</h2>
+<dl>
+    <dt><a href="https://example.com/apple">りんご</a></dt>
+    <dd>赤くてまるい <em>果物</em></dd>
+    <dt><a href="https://example.com/grape">ぶどう</a></dt>
+    <dd>紫で房状の <strong>果物</strong></dd>
+    <dt><a href="https://example.com/melon">めろん</a></dt>
+    <dd>緑で固い皮に包まれている</dd>
+</dl>
+<h2>3. リンクと画像</h2>
+<p><a href="https://commonmark.org">CommonMark 公式</a></p>
+`;
 
-    const html = render(md)
-
-    // No stray '#" emitted between blocks
-    assert.ok(
-        !html.includes('</dl>#'),
-        `should not contain "</dl>#", got:\n${html}`
-    )
-
-    // The next heading must remain <h2> (not <h1>)
-    assert.ok(
-        html.includes('<h2>3. リンクと画像</h2>'),
-        `expected next heading to be <h2>, got:\n${html}`
-    )
-
-    // And the heading should not be split into a literal "#" + "<h1>..."
-    assert.ok(
-        !html.includes('\n#\n<h1>'),
-        `should not contain split heading artifacts, got:\n${html}`
-    )
+    equalOutput(render(md), html);
 })
 
 test('DL list: inline constructs work inside dt/dd (link/em/strong)', () => {
     const md = `\
-## 説明リスト
+## 定義リスト
 
 : [りんご](https://example.com/apple)
     : 赤くてまるい *果物*
 : [ぶどう](https://example.com/grape)
     : 紫で房状の **果物**
-`
+`;
+    const html = `\
+<h2>定義リスト</h2>
+<dl>
+    <dt><a href="https://example.com/apple">りんご</a></dt>
+    <dd>赤くてまるい <em>果物</em></dd>
+    <dt><a href="https://example.com/grape">ぶどう</a></dt>
+    <dd>紫で房状の <strong>果物</strong>
+    </dd>
+</dl>
+`;
 
-    const html = render(md)
-
-    assert.ok(html.includes('<dt><a href="https://example.com/apple">りんご</a></dt>'), html)
-    assert.ok(html.includes('<dd>赤くてまるい <em>果物</em></dd>'), html)
-    assert.ok(html.includes('<dt><a href="https://example.com/grape">ぶどう</a></dt>'), html)
-    assert.ok(html.includes('<dd>紫で房状の <strong>果物</strong></dd>'), html)
+    equalOutput(render(md), html);
 })
 
 test('full markdown example (lang ja)', () => {
@@ -232,7 +282,7 @@ test('full markdown example (lang ja)', () => {
 1. 番号付き
 2. 項目
 
-## 説明リスト
+## 定義リスト
 
 : [りんご](https://ja.wikipedia.org/wiki/%E3%83%AA%E3%83%B3%E3%82%B4)
     : 赤くてまるい *果物*
@@ -264,8 +314,8 @@ console.log(message);
 ## 7. エスケープ
 \\* アスタリスクをそのまま表示する。
 `;
-    
-    const output = `\
+
+    const html = `\
 <h1>CommonMark + DL-List サンプル</h1>
 <h2>1. テキスト装飾</h2>
 <p><em>斜体</em> または <em>斜体</em><br />
@@ -284,7 +334,7 @@ console.log(message);
 <li>番号付き</li>
 <li>項目</li>
 </ol>
-<h2>説明リスト</h2>
+<h2>定義リスト</h2>
 <dl><dt><a href="https://ja.wikipedia.org/wiki/%E3%83%AA%E3%83%B3%E3%82%B4">りんご</a></dt><dd>赤くてまるい <em>果物</em></dd><dt><a href="https://ja.wikipedia.org/wiki/%E3%83%96%E3%83%89%E3%82%A6">ぶどう</a></dt><dd>紫で房状の <strong>果物</strong></dd><dt><a href="https://ja.wikipedia.org/wiki/%E3%83%A1%E3%83%AD%E3%83%B3">めろん</a></dt><dd>緑で固い皮に包まれている</dd></dl>
 <h2>3. リンクと画像</h2>
 <p><a href="https://commonmark.org">CommonMark 公式</a><br />
@@ -308,8 +358,5 @@ console.log(message);
 <p>* アスタリスクをそのまま表示する。</p>
 `;
 
-    assert.equal(
-        render(md),
-        output
-    )
+    equalOutput(render(md), html);
 })

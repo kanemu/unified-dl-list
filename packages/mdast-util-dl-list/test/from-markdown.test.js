@@ -2,8 +2,8 @@ import test from "node:test";
 import assert from "node:assert/strict";
 
 import { fromMarkdown } from "mdast-util-from-markdown";
-import { dlList } from "micromark-extension-dl-list";
-import { dlListFromMarkdown } from "../lib/index.js";
+import { dlList } from '../../micromark-extension-dl-list/src/syntax.js'
+import { dlListFromMarkdown } from '../dist/index.js'
 
 test("parses a basic definition list into mdast nodes", async (t) => {
     const md = [

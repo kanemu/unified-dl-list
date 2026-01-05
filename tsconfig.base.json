@@ -1,17 +1,23 @@
 {
   "compilerOptions": {
+    /* Language + runtime */
     "target": "ES2022",
     "lib": ["ES2022"],
     "module": "ESNext",
     "moduleResolution": "Bundler",
+
+    /* Type safety */
     "strict": true,
-
-    "declaration": true,
-    "declarationMap": true,
-    "sourceMap": true,
-
     "skipLibCheck": true,
+
+    /* Interop + ergonomics */
     "resolveJsonModule": true,
-    "verbatimModuleSyntax": true
+    "verbatimModuleSyntax": true,
+    "isolatedModules": true,
+
+    /* Build strategy
+       - We build with tsup, so tsc should NOT emit.
+       - Keep emit-related flags out of base to avoid confusion. */
+    "noEmit": true
   }
 }

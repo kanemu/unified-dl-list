@@ -1,35 +1,66 @@
 {
     "name": "hast-util-dl-list",
     "version": "0.1.0",
+    "description": "Handlers only for converting mdast definition list nodes into hast elements (<dl>, <dt>, <dd>) for remark-rehype.",
     "type": "module",
     "license": "MIT",
+    "author": "Yohei Kanamura",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/kanemu/unified-dl-list",
+        "directory": "packages/hast-util-dl-list"
+    },
+    "homepage": "https://github.com/kanemu/unified-dl-list/tree/main/packages/hast-util-dl-list",
+    "bugs": {
+        "url": "https://github.com/kanemu/unified-dl-list/issues"
+    },
     "exports": {
         ".": {
-            "types": "./lib/index.d.ts",
-            "default": "./lib/index.js"
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.js"
         }
     },
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
     "files": [
-        "lib/"
+        "dist/**",
+        "README.md",
+        "LICENSE"
     ],
     "scripts": {
-        "build": "tsc -p tsconfig.json",
-        "clean": "rimraf lib",
+        "build": "tsup",
+        "clean": "rimraf dist",
         "prepack": "pnpm build",
         "test": "pnpm build && node --test ./test/*.test.js",
         "typecheck": "tsc -p tsconfig.json --noEmit"
     },
     "dependencies": {
         "hastscript": "^9.0.1",
-        "mdast-util-to-hast": "^13.0.0"
+        "mdast-util-to-hast": "^13.2.1"
     },
     "devDependencies": {
+        "@types/mdast": "^4.0.4",
         "@types/hast": "^3.0.4",
         "hast-util-to-html": "^9.0.5",
-        "mdast-util-dl-list": "workspace:*",
+        "mdast-util-dl-list": "^0.1.0",
         "mdast-util-from-markdown": "^2.0.2",
-        "micromark-extension-dl-list": "workspace:*",
-        "rimraf": "^6.0.0",
+        "micromark-extension-dl-list": "^0.1.0",
+        "rimraf": "^6.1.2",
+        "tsup": "^8.5.1",
         "typescript": "^5.4.0"
-    }
+    },
+    "keywords": [
+        "unified",
+        "remark",
+        "rehype",
+        "hast",
+        "mdast",
+        "remark-rehype",
+        "hast-util",
+        "markdown",
+        "definition-list",
+        "dl",
+        "dt",
+        "dd"
+    ]
 }

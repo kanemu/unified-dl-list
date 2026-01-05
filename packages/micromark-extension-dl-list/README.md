@@ -1,123 +1,41 @@
 # micromark-extension-dl-list
 
-A micromark extension that adds support for definition lists (`dl`, `dt`, `dd`) using a colon-based syntax.
+A **micromark extension** that adds colon-based definition list syntax.
 
-> This package is maintained as part of the **unified-dl-list** monorepo.
+This package provides **syntax only** and is intended to be used with
+remark or other unified pipelines.
 
-This extension is designed to behave as closely as possible to CommonMark list rules, including indentation handling, blank-line boundaries, and safe coexistence with other block constructs such as headings, lists, and block quotes.
-
-It consists of:
-- a **syntax extension** (`dlList`) for tokenizing definition lists
-- an **HTML extension** (`dlListHtml`) for rendering HTML output
-
-## Features
-
-- Colon-based definition list syntax
-- Up to 3 columns of indentation allowed before `:` (same rule as CommonMark lists)
-- Multiple terms and descriptions in a single list
-- Continuation lines appended to the previous `dt` / `dd`
-- Nested lists (`ul`, `ol`) inside `dd`
-- Nested definition lists inside `dd`
-- Inline Markdown support inside `dt` and `dd`
-  - links
-  - emphasis / strong
-  - inline code
-- Safe interaction with CommonMark blocks
-
-## Syntax
-
-### Basic definition list
-
-```markdown
-: term1
-    : description1
-: term2
-    : description2
-````
-
-```html
-<dl>
-  <dt>term1</dt>
-  <dd>description1</dd>
-  <dt>term2</dt>
-  <dd>description2</dd>
-</dl>
-```
-
-### Multiple description
-
-```markdown
-: term
-    : description 1
-    : description 2
-```
-
-### Terms only
-
-If no indented `:` lines follow, all items are treated as terms:
-
-```markdown
-: term1
-: term2
-: term3
-```
-
-### Continuation lines
-
-Indented lines without `:` are appended to the previous term or description:
-
-```markdown
-: term line 1
-  term line 2
-    : description line 1
-      description line 2
-```
-
-### Nested lists inside descriptions
-
-```markdown
-: fruits
-    : - apple
-      - grape
-      - orange
-```
-
-### Nested definition lists
-
-```markdown
-: fruits
-    : : apple
-          : Orin
-          : Fuji
-          : Jonagold
-    : grape
-    : orange
-```
-
-## Inline Markdown
-
-Inline constructs are fully supported inside `dt` and `dd`:
-
-```markdown
-: [Apple](https://example.com)
-    : Red *fruit*
-```
+For the detailed definition list syntax,  
+→ **[docs/syntax.md](https://github.com/kanemu/unified-dl-list/blob/main/docs/syntax.md)**.
 
 ## Installation
 
 ```bash
 npm install micromark-extension-dl-list
+````
+
+or with pnpm:
+
+```bash
+pnpm add micromark-extension-dl-list
 ```
 
 ## Usage
+
+### With micromark (HTML output)
+
+This package can be used directly with `micromark`
+to parse colon-based definition lists and generate
+`<dl>`, `<dt>`, and `<dd>` elements.
 
 ```js
 import { micromark } from 'micromark'
 import { dlList, dlListHtml } from 'micromark-extension-dl-list'
 
-const md = `\
-: Apple
-    : Red *fruit*
+const md = `
+: term
+    : description
+    : another description
 `
 
 const html = micromark(md, {
@@ -128,18 +46,34 @@ const html = micromark(md, {
 console.log(html)
 ```
 
-## Design Notes
+Output:
 
-* This extension never consumes indentation unless a definition list is confirmed via lookahead.
-* Blank lines that terminate a definition list are not consumed, ensuring correct block boundaries.
-* The tokenizer is suitable for reuse in mdast or remark-based pipelines.
+```html
+<dl>
+  <dt>term</dt>
+  <dd>description</dd>
+  <dd>another description</dd>
+</dl>
+```
 
-## Limitations
+## What this package does
 
-- Definition lists inside block quotes (`>`) are **not supported**.
-- A line starting with `:` inside a block quote is treated as normal text.
-- This limitation is intentional to keep the tokenizer simple and to avoid interfering with CommonMark block quote parsing.
+* Adds colon-based definition list syntax to micromark
+* Emits tokens for `<dl>`, `<dt>`, and `<dd>`
 
----
+## What this package does NOT do
 
-© 2026 Yohei Kanamura. Released under the MIT License.
+- Does not generate mdast nodes
+- Does not provide a remark plugin
+
+## Related packages
+
+This package is part of the **[unified-dl-list](https://github.com/kanemu/unified-dl-list)** monorepo:
+
+- [`remark-dl-list`](https://github.com/kanemu/unified-dl-list/tree/main/packages/remark-dl-list)
+- [`mdast-util-dl-list`](https://github.com/kanemu/unified-dl-list/tree/main/packages/mdast-util-dl-list)
+- [`hast-util-dl-list`](https://github.com/kanemu/unified-dl-list/tree/main/packages/hast-util-dl-list)
+
+## License
+
+MIT

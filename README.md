@@ -1,38 +1,98 @@
 # unified-dl-list
 
-Definition list (DL) support for the unified ecosystem.
+A monorepo that provides **colon-based definition list support**
+for the unified / remark / rehype ecosystem.
 
-This monorepo contains packages that enable parsing and rendering of definition lists
-(e.g. `dt` / `dd` style structures) across micromark, mdast, and hast.
+This project implements definition lists using the HTML elements
+`<dl>`, `<dt>`, and `<dd>`, with a design that closely follows
+CommonMark block parsing rules.
+
+The implementation is split into **four focused packages**,
+each responsible for a single layer of the unified pipeline.
+
+## What is a definition list?
+
+This project supports definition lists using a colon-based syntax:
+
+```markdown
+: term
+    : description
+````
+
+which renders as:
+
+```html
+<dl>
+  <dt>term</dt>
+  <dd>description</dd>
+</dl>
+```
+
+For the detailed definition list syntax,  
+→ **[docs/syntax.md](docs/syntax.md)**.
 
 ## Packages
 
-- [`micromark-extension-dl-list`](./packages/micromark-extension-dl-list/)
-  - Micromark extension (tokenizer) for definition lists.
-- [`mdast-util-dl-list`](./packages/mdast-util-dl-list/)
-  - MDAST utilities (fromMarkdown extension) for definition lists.
-- [`hast-util-dl-list`](./packages/hast-util-dl-list/)
-  - HAST utilities (mdast-util-to-hast handlers) for definition lists.
+### [micromark-extension-dl-list](packages/micromark-extension-dl-list)
 
-## Install
+**micromark syntax & HTML extension**
 
-Install the specific package(s) you need:
+* Tokenizes colon-based definition lists at the micromark level
+* Renders `<dl>`, `<dt>`, `<dd>` in HTML output
+* Performs strict lookahead to avoid interfering with CommonMark paragraphs
 
-- `micromark-extension-dl-list`
-- `mdast-util-dl-list`
-- `hast-util-dl-list`
+Use this package if you work directly with `micromark`.
 
-## Development
+### [mdast-util-dl-list](packages/mdast-util-dl-list)
 
-This repository uses pnpm workspaces.
+**mdast utilities only**
 
-```sh
-pnpm install
-pnpm build
-pnpm test
-pnpm typecheck
-````
+* Converts micromark tokens into mdast nodes
+* Defines node types for definition lists
+* Supports mdast → Markdown serialization (to-markdown)
 
-## License
+This package does not parse Markdown or render HTML.
 
-MIT
+### [hast-util-dl-list](packages/hast-util-dl-list)
+
+**hast handlers only**
+
+* Provides handlers for converting mdast definition list nodes to hast
+* Intended for use with `remark-rehype`
+
+This package does not parse Markdown or create mdast nodes.
+
+### [remark-dl-list](packages/remark-dl-list)
+
+**remark plugin (recommended entry point)**
+
+* Registers micromark, mdast, and to-markdown extensions
+* Enables definition lists with a single `.use()` call
+* Designed for use with `remark-parse` and `remark-stringify`
+
+Most users should start with this package.
+
+## Which package should I use?
+
+| Use case                             | Recommended package           |
+| ------------------------------------ | ----------------------------- |
+| Direct micromark usage               | `micromark-extension-dl-list` |
+| mdast transformation / serialization | `mdast-util-dl-list`          |
+| mdast → HTML (rehype)               | `hast-util-dl-list`           |
+| remark / unified pipeline            | `remark-dl-list`              |
+
+## Repository structure
+
+```
+packages/
+  micromark-extension-dl-list/
+  mdast-util-dl-list/
+  hast-util-dl-list/
+  remark-dl-list/
+```
+
+Each package contains its own README, LICENSE, and tests.
+
+---
+
+© 2026 Yohei Kanamura Released under the MIT License.

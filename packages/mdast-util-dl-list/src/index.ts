@@ -1,8 +1,11 @@
-export { dlListFromMarkdown } from "./from-markdown.js";
+export { dlListFromMarkdown } from './from-markdown'
+export { dlListToMarkdown } from './to-markdown'
+
 export type {
     DlListFromMarkdownOptions,
     DefinitionList,
     DefinitionItem,
     DefinitionTerm,
-    DefinitionDescription
-} from "./types.js";
+    DefinitionDescription,
+    DefinitionNode
+} from './types'
