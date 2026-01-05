@@ -1,0 +1,46 @@
+{
+  "name": "micromark-extension-dl-list",
+  "version": "0.1.0",
+  "description": "A micromark extension that adds CommonMark-compatible definition list (dl/dt/dd) support using colon-based syntax.",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js"
+    },
+    "./syntax.js": {
+      "import": "./lib/syntax.js"
+    },
+    "./html.js": {
+      "import": "./lib/html.js"
+    }
+  },
+  "files": [
+    "index.js",
+    "lib/",
+    "README.md",
+    "README-ja.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node --test ./test/*.test.js"
+  },
+  "dependencies": {
+    "micromark": "^4.0.2",
+    "micromark-util-character": "^2.1.1",
+    "micromark-util-symbol": "^2.0.1"
+  },
+  "keywords": [
+    "micromark",
+    "micromark-extension",
+    "markdown",
+    "definition-list",
+    "dl",
+    "dt",
+    "dd",
+    "commonmark"
+  ],
+  "author": "Yohei Kanamura",
+  "license": "MIT"
+}

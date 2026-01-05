@@ -1,0 +1,31 @@
+{
+    "name": "mdast-util-dl-list",
+    "version": "0.1.0",
+    "type": "module",
+    "license": "MIT",
+    "exports": {
+        ".": {
+            "types": "./lib/index.d.ts",
+            "default": "./lib/index.js"
+        }
+    },
+    "files": [
+        "lib/"
+    ],
+    "scripts": {
+        "build": "tsc -p tsconfig.json",
+        "clean": "rimraf lib",
+        "prepack": "pnpm build",
+        "test": "pnpm build && node --test ./test/*.test.js",
+        "typecheck": "tsc -p tsconfig.json --noEmit"
+    },
+    "dependencies": {
+        "mdast-util-from-markdown": "^2.0.2",
+        "micromark-extension-dl-list": "workspace:*"
+    },
+    "devDependencies": {
+        "@types/mdast": "^4.0.4",
+        "rimraf": "^6.0.0",
+        "typescript": "^5.4.0"
+    }
+}

@@ -141,3 +141,7 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
+
+# build outputs (TS packages only)
+packages/mdast-util-dl-list/lib/
+packages/hast-util-dl-list/lib/

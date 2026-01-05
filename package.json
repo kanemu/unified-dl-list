@@ -1,53 +1,27 @@
 {
-  "name": "micromark-extension-dl-list",
-  "version": "0.1.0",
-  "description": "A micromark extension that adds CommonMark-compatible definition list (dl/dt/dd) support using colon-based syntax.",
-  "type": "module",
-  "exports": {
-    ".": {
-      "import": "./index.js"
+    "name": "unified-dl-list",
+    "private": true,
+    "type": "module",
+    "packageManager": "pnpm@10.27.0",
+    "workspaces": [
+        "packages/*"
+    ],
+    "scripts": {
+        "build": "pnpm -r --if-present build",
+        "test": "pnpm -r --if-present test",
+        "typecheck": "pnpm -r --if-present typecheck",
+        "clean": "pnpm -r --if-present clean"
     },
-    "./syntax.js": {
-      "import": "./lib/syntax.js"
-    },
-    "./html.js": {
-      "import": "./lib/html.js"
+    "devDependencies": {
+        "hast-util-dl-list": "workspace:*",
+        "hast-util-to-html": "^9.0.5",
+        "mdast-util-dl-list": "workspace:*",
+        "mdast-util-from-markdown": "^2.0.2",
+        "mdast-util-to-hast": "^13.2.1",
+        "micromark": "^4.0.2",
+        "micromark-extension-dl-list": "workspace:*",
+        "rimraf": "^6.0.0",
+        "tsx": "^4.21.0",
+        "typescript": "^5.4.0"
     }
-  },
-  "files": [
-    "index.js",
-    "lib/",
-    "README.md",
-    "README-ja.md",
-    "CHANGELOG.md",
-    "LICENSE"
-  ],
-  "scripts": {
-    "test": "node --test ./test/*.test.js"
-  },
-  "dependencies": {
-    "micromark": "^4.0.2",
-    "micromark-util-character": "^2.1.1",
-    "micromark-util-symbol": "^2.0.1"
-  },
-  "keywords": [
-    "micromark",
-    "micromark-extension",
-    "markdown",
-    "definition-list",
-    "dl",
-    "dt",
-    "dd",
-    "commonmark"
-  ],
-  "author": "Yohei Kanamura",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/kanemu/micromark-extension-dl-list.git"
-  },
-  "homepage": "https://github.com/kanemu/micromark-extension-dl-list#readme",
-  "bugs": {
-    "url": "https://github.com/kanemu/micromark-extension-dl-list/issues"
-  }
 }
