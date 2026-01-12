@@ -2,15 +2,18 @@
 set -euo pipefail
 
 # repo root で実行する想定
-pnpm -v >/dev/null
+command -v pnpm >/dev/null
 
-echo "==> Clean (optional)"
-# pnpm -r run clean || true
+echo "==> Install"
+pnpm install
+
+echo "==> Clean"
+pnpm -r --if-present run clean
 
 echo "==> Build all packages"
-pnpm -r run build
+pnpm build
 
 echo "==> Test all packages"
-pnpm -r run test
+pnpm test
 
 echo "==> Done"

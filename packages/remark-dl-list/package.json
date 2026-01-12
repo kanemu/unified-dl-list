@@ -35,8 +35,8 @@
         "typecheck": "tsc -p tsconfig.json --noEmit"
     },
     "dependencies": {
-        "mdast-util-dl-list": "^0.1.0",
-        "micromark-extension-dl-list": "^0.1.0"
+        "mdast-util-dl-list": "workspace:^0.1.0",
+        "micromark-extension-dl-list": "workspace:^0.1.0"
     },
     "peerDependencies": {
         "unified": "^11.0.5"
