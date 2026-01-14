@@ -161,6 +161,64 @@ test('handlers: dd container stops before next term', () => {
     equalOutput(render(md), html)
 })
 
+test('handlers: dd can nest dl (": : apple" etc)', () => {
+    const md = `\
+: fruits
+    : : apple
+          : Orin
+          : Fuji
+          : Jonagold
+    : grape
+    : orange
+`;
+    const html = `\
+<dl>
+  <dt>fruits</dt>
+  <dd>
+    <dl>
+      <dt>apple</dt>
+      <dd>Orin</dd>
+      <dd>Fuji</dd>
+      <dd>Jonagold</dd>
+    </dl>
+  </dd>
+  <dd>grape</dd>
+  <dd>orange</dd>
+</dl>
+`;
+
+    equalOutput(render(md), html);
+})
+
+test('handlers: dd can nest dl (":: apple" etc)', () => {
+    const md = `\
+: fruits
+    :: apple
+         : Orin
+         : Fuji
+         : Jonagold
+    : grape
+    : orange
+`;
+    const html = `\
+<dl>
+  <dt>fruits</dt>
+  <dd>
+    <dl>
+      <dt>apple</dt>
+      <dd>Orin</dd>
+      <dd>Fuji</dd>
+      <dd>Jonagold</dd>
+    </dl>
+  </dd>
+  <dd>grape</dd>
+  <dd>orange</dd>
+</dl>
+`;
+
+    equalOutput(render(md), html);
+})
+
 test('handlers: blank line ends dl-list; following paragraph remains', () => {
     const md = `\
 : term

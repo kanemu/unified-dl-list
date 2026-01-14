@@ -146,6 +146,40 @@ test('from-markdown: dd container stops before next term', async () => {
     assert.deepEqual(actual, expected)
 })
 
+test('from-markdown: dd can nest dl (": : apple" etc)', async () => {
+    const md = `\
+: fruits
+    : : apple
+          : Orin
+          : Fuji
+          : Jonagold
+    : grape
+    : orange
+`;
+
+    const actual = stripPositions(parse(md))
+    const expected = await readJson('dd_can_nest_dl.json')
+
+    assert.deepEqual(actual, expected)
+})
+
+test('from-markdown: dd can nest dl (":: apple" etc)', async () => {
+    const md = `\
+: fruits
+    :: apple
+         : Orin
+         : Fuji
+         : Jonagold
+    : grape
+    : orange
+`;
+
+    const actual = stripPositions(parse(md))
+    const expected = await readJson('dd_can_nest_dl.json')
+
+    assert.deepEqual(actual, expected)
+})
+
 test('from-markdown: blank line ends from-markdown; following paragraph remains', async () => {
     const md = `\
 : term

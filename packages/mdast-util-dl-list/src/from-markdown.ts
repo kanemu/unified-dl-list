@@ -15,6 +15,7 @@ import type { RootContent, PhrasingContent } from 'mdast'
  * - dd container is deindented by `_dlIndent` columns
  * - normalize list-indent and nested-dl-indent inside dd container
  * - if container parses to a single paragraph, unwrap to phrasing directly under dd
+ * - dd container is deindented by `_dlIndent` (+ `_dlFirstLineOffset` for `::` shorthand) columns
  */
 export function dlListFromMarkdown(options: DlListFromMarkdownOptions = {}): Extension {
     const maxDepth = options.maxDepth ?? 8
@@ -64,7 +65,8 @@ export function dlListFromMarkdown(options: DlListFromMarkdownOptions = {}): Ext
                 if (dd?.type !== 'definitionDescription') return
 
                 let raw = this.sliceSerialize(token)
-                const indentCols = (token as any)._dlIndent ?? 0
+                const indentCols =
+                    ((token as any)._dlIndent ?? 0) + ((token as any)._dlFirstLineOffset ?? 0)
 
                 raw = deindentByColumns(raw, indentCols)
                 raw = normalizeFlatListIndentInDd(raw)

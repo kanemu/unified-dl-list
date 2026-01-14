@@ -1,0 +1,93 @@
+{
+    "type": "root",
+    "children": [
+        {
+            "type": "definitionList",
+            "children": [
+                {
+                    "type": "definitionItem",
+                    "children": [
+                        {
+                            "type": "definitionTerm",
+                            "children": [
+                                {
+                                    "type": "text",
+                                    "value": "fruits"
+                                }
+                            ]
+                        },
+                        {
+                            "type": "definitionDescription",
+                            "children": [
+                                {
+                                    "type": "definitionList",
+                                    "children": [
+                                        {
+                                            "type": "definitionItem",
+                                            "children": [
+                                                {
+                                                    "type": "definitionTerm",
+                                                    "children": [
+                                                        {
+                                                            "type": "text",
+                                                            "value": "apple"
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "definitionDescription",
+                                                    "children": [
+                                                        {
+                                                            "type": "text",
+                                                            "value": "Orin"
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "definitionDescription",
+                                                    "children": [
+                                                        {
+                                                            "type": "text",
+                                                            "value": "Fuji"
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "definitionDescription",
+                                                    "children": [
+                                                        {
+                                                            "type": "text",
+                                                            "value": "Jonagold"
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "definitionDescription",
+                            "children": [
+                                {
+                                    "type": "text",
+                                    "value": "grape"
+                                }
+                            ]
+                        },
+                        {
+                            "type": "definitionDescription",
+                            "children": [
+                                {
+                                    "type": "text",
+                                    "value": "orange"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

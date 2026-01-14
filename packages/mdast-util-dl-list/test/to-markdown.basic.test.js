@@ -128,6 +128,24 @@ test('to-markdown: dd container stops before next term', async () => {
     assert.equal(md, result)
 })
 
+test('to-markdown: dd can nest dl (": : apple" etc)', async () => {
+    const md = `\
+: fruits
+    : : apple
+          : Orin
+          : Fuji
+          : Jonagold
+    : grape
+    : orange
+`;
+
+    const tree = await readJson('dd_can_nest_dl.json')
+    const result = toMarkdown(tree, {
+        extensions: [dlListToMarkdown()]
+    })
+    assert.equal(md, result)
+})
+
 test('to-markdown: blank line ends to-markdown; following paragraph remains', async () => {
     const md = `\
 : term

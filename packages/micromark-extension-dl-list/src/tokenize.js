@@ -45,6 +45,9 @@ export function tokenizeDlList(effects, ok, nok) {
     /** @type {boolean} */
     let termTextOpen = false
 
+    /** @type {boolean} */
+    let ddMarkerHadSpace = false
+
     const closeTermTextIfOpen = () => {
         if (termTextOpen) {
             effects.exit('dlTermText')
@@ -296,6 +299,7 @@ export function tokenizeDlList(effects, ok, nok) {
         if (isEof(code) || code !== codes.colon) return nok(code)
 
         closeDescIfOpen()
+        ddMarkerHadSpace = false
 
         effects.enter('dlDesc')
         descOpen = true
@@ -321,6 +325,7 @@ export function tokenizeDlList(effects, ok, nok) {
 
         // dd マーカー直後のスペースはコンテナに入れない（見た目調整用）
         if (isIndent(code)) {
+            ddMarkerHadSpace = true
             effects.enter('dlMarkerSpace')
             consumeSafe(effects, code)
             effects.exit('dlMarkerSpace')
@@ -331,6 +336,11 @@ export function tokenizeDlList(effects, ok, nok) {
         // html.js が参照する deindent 量（columns）
         // @ts-ignore
         t._dlIndent = ddIndent
+
+        // `::` shorthand: dd marker ':' immediately followed by another ':'
+        // with NO spaces in between.
+        // @ts-ignore
+        t._dlFirstLineOffset = (!ddMarkerHadSpace && code === codes.colon ? 1 : 0)
 
         return descContainerContent(code)
     }
