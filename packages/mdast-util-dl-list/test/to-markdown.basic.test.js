@@ -86,6 +86,19 @@ test('to-markdown: dd marker with no content uses container (no dlDescText)', as
     assert.equal(md, result)
 })
 
+test('to-markdown: dd markers only, no text', async () => {
+    const md = `\
+: term
+    :
+`;
+
+    const tree = await readJson('dd_markers_only_no_text.json')
+    const result = toMarkdown(tree, {
+        extensions: [dlListToMarkdown()]
+    })
+    assert.equal(md, result)
+})
+
 test('to-markdown: dd container captures indented continuation lines', async () => {
     const md = `\
 : term

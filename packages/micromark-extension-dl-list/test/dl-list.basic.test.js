@@ -102,6 +102,20 @@ test('dl-list: dd marker with no content uses container (no dlDescText)', () => 
     equalOutput(render(md), html)
 })
 
+test('dl-list: dd markers only, no text', () => {
+    const md = `\
+: term
+    :
+`;
+    const html = `\
+<dl>
+    <dt>term</dt>
+    <dd></dd>
+</dl>
+`;
+    equalOutput(render(md), html)
+})
+
 test('dl-list: dd container captures indented continuation lines', () => {
     const md = `\
 : term
