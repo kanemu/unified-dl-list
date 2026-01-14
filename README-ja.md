@@ -92,6 +92,41 @@ packages/
 
 各パッケージには、それぞれ README、LICENSE、テストが含まれています。
 
+## 開発方法
+
+このリポジトリは **pnpm workspaces** を使用しています。
+
+### 依存関係のインストール
+
+```bash
+pnpm install
+```
+
+### 全パッケージのビルドまたはテスト
+
+```bash
+pnpm build
+```
+
+```bash
+pnpm test
+```
+
+### 個別パッケージのビルドまたはテスト
+
+```bash
+pnpm --filter mdast-util-dl-list build
+pnpm --filter hast-util-dl-list build
+pnpm --filter remark-dl-list build
+```
+
+```bash
+pnpm --filter micromark-extension-dl-list test
+pnpm --filter mdast-util-dl-list test
+pnpm --filter hast-util-dl-list test
+pnpm --filter remark-dl-list test
+```
+
 ---
 
 © 2026 Yohei Kanamura Released under the MIT License.

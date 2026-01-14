@@ -93,6 +93,41 @@ packages/
 
 Each package contains its own README, LICENSE, and tests.
 
+## Development
+
+This repository uses **pnpm workspaces**.
+
+### Install dependencies
+
+```bash
+pnpm install
+```
+
+### Build or test all packages
+
+```bash
+pnpm build
+```
+
+```bash
+pnpm test
+```
+
+### Build or test individual packages
+
+```bash
+pnpm --filter mdast-util-dl-list build
+pnpm --filter hast-util-dl-list build
+pnpm --filter remark-dl-list build
+```
+
+```bash
+pnpm --filter micromark-extension-dl-list test
+pnpm --filter mdast-util-dl-list test
+pnpm --filter hast-util-dl-list test
+pnpm --filter remark-dl-list test
+```
+
 ---
 
 © 2026 Yohei Kanamura Released under the MIT License.
