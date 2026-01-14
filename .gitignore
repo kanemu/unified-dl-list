@@ -17,6 +17,7 @@ yarn-error.log*
 
 # pnpm
 .pnpm-store/
+.pack-preview/
 
 # npm lockfile (pnpm monorepo では不要)
 package-lock.json
