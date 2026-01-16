@@ -146,6 +146,32 @@ test('to-markdown: dd can nest dl (": : apple" etc)', async () => {
     assert.equal(md, result)
 })
 
+test('to-markdown: dd can nest dl (more complex structure)', async () => {
+    const md = `\
+: Apple
+    : : Orin
+          : The name comes from “king of apples”
+      : Fuji
+          : The apple variety that originated in Japan
+            and is the most produced around the world.
+      : Jonagold
+          : A popular variety created in America
+            by crossing Golden Delicious and Jonathan.
+    : There are many other varieties as well.
+: Grapes
+    : purple, clustered fruit
+: Melon
+    : covered in a green, hard skin
+`;
+
+    const tree = await readJson('more_complex_structure.json')
+    const result = toMarkdown(tree, {
+        extensions: [dlListToMarkdown()]
+    })
+    console.log(result);
+    assert.equal(md, result)
+})
+
 test('to-markdown: blank line ends to-markdown; following paragraph remains', async () => {
     const md = `\
 : term

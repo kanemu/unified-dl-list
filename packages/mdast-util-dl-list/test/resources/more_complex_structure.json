@@ -1,0 +1,158 @@
+{
+    "type": "root",
+    "children": [
+        {
+            "type": "definitionList",
+            "children": [
+                {
+                    "type": "definitionItem",
+                    "children": [
+                        {
+                            "type": "definitionTerm",
+                            "children": [
+                                {
+                                    "type": "text",
+                                    "value": "Apple"
+                                }
+                            ]
+                        },
+                        {
+                            "type": "definitionDescription",
+                            "children": [
+                                {
+                                    "type": "definitionList",
+                                    "children": [
+                                        {
+                                            "type": "definitionItem",
+                                            "children": [
+                                                {
+                                                    "type": "definitionTerm",
+                                                    "children": [
+                                                        {
+                                                            "type": "text",
+                                                            "value": "Orin"
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "definitionDescription",
+                                                    "children": [
+                                                        {
+                                                            "type": "text",
+                                                            "value": "The name comes from “king of apples”"
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "type": "definitionItem",
+                                            "children": [
+                                                {
+                                                    "type": "definitionTerm",
+                                                    "children": [
+                                                        {
+                                                            "type": "text",
+                                                            "value": "Fuji"
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "definitionDescription",
+                                                    "children": [
+                                                        {
+                                                            "type": "text",
+                                                            "value": "The apple variety that originated in Japan\nand is the most produced around the world."
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "type": "definitionItem",
+                                            "children": [
+                                                {
+                                                    "type": "definitionTerm",
+                                                    "children": [
+                                                        {
+                                                            "type": "text",
+                                                            "value": "Jonagold"
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "definitionDescription",
+                                                    "children": [
+                                                        {
+                                                            "type": "text",
+                                                            "value": "A popular variety created in America\nby crossing Golden Delicious and Jonathan."
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "definitionDescription",
+                            "children": [
+                                {
+                                    "type": "text",
+                                    "value": "There are many other varieties as well."
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "definitionItem",
+                    "children": [
+                        {
+                            "type": "definitionTerm",
+                            "children": [
+                                {
+                                    "type": "text",
+                                    "value": "Grapes"
+                                }
+                            ]
+                        },
+                        {
+                            "type": "definitionDescription",
+                            "children": [
+                                {
+                                    "type": "text",
+                                    "value": "purple, clustered fruit"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "definitionItem",
+                    "children": [
+                        {
+                            "type": "definitionTerm",
+                            "children": [
+                                {
+                                    "type": "text",
+                                    "value": "Melon"
+                                }
+                            ]
+                        },
+                        {
+                            "type": "definitionDescription",
+                            "children": [
+                                {
+                                    "type": "text",
+                                    "value": "covered in a green, hard skin"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
