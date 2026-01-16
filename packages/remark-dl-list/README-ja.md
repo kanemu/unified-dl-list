@@ -6,6 +6,9 @@
 このプラグインは remark に定義リストのサポートを追加し、
 Markdown へのラウンドトリップ（再シリアライズ）を可能にします。
 
+定義リストの詳細な構文については、
+→ **[docs/syntax-ja.md](https://github.com/kanemu/unified-dl-list/blob/main/docs/syntax-ja.md)** を参照してください。
+
 ## インストール
 
 ```bash
@@ -117,16 +120,13 @@ console.log(String(html))
 </dl>
 ```
 
-定義リストの詳細な構文については、
-→ **[docs/syntax-ja.md](https://github.com/kanemu/unified-dl-list/blob/main/docs/syntax-ja.md)** を参照してください。
-
 ## 関連パッケージ
 
 このパッケージは **[unified-dl-list](https://github.com/kanemu/unified-dl-list)** モノレポの一部です。
 
-* [`micromark-extension-dl-list`](https://github.com/kanemu/unified-dl-list/tree/main/packages/micromark-extension-dl-list) – micromark 用の構文拡張
-* [`mdast-util-dl-list`](https://github.com/kanemu/unified-dl-list/tree/main/packages/mdast-util-dl-list) – mdast のパースとシリアライズ
-* [`hast-util-dl-list`](https://github.com/kanemu/unified-dl-list/tree/main/packages/hast-util-dl-list) – remark-rehype 用の HTML ハンドラ
+* [`micromark-extension-dl-list`](https://www.npmjs.com/package/micromark-extension-dl-list) – micromark 用の構文拡張
+* [`mdast-util-dl-list`](https://www.npmjs.com/package/mdast-util-dl-list) – mdast のパースとシリアライズ
+* [`hast-util-dl-list`](https://www.npmjs.com/package/hast-util-dl-list) – remark-rehype 用の HTML ハンドラ
 
 ## ライセンス
 

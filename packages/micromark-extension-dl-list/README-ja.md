@@ -72,9 +72,9 @@ console.log(html)
 
 このパッケージは **[unified-dl-list](https://github.com/kanemu/unified-dl-list)** モノレポの一部です。
 
-- [`remark-dl-list`](https://github.com/kanemu/unified-dl-list/tree/main/packages/remark-dl-list)
-- [`mdast-util-dl-list`](https://github.com/kanemu/unified-dl-list/tree/main/packages/mdast-util-dl-list)
-- [`hast-util-dl-list`](https://github.com/kanemu/unified-dl-list/tree/main/packages/hast-util-dl-list)
+- [`remark-dl-list`](https://www.npmjs.com/package/remark-dl-list)
+- [`mdast-util-dl-list`](https://www.npmjs.com/package/mdast-util-dl-list)
+- [`hast-util-dl-list`](https://www.npmjs.com/package/hast-util-dl-list)
 
 ## ライセンス
 

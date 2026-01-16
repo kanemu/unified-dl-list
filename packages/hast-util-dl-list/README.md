@@ -61,9 +61,9 @@ console.log(String(html))
 
 This package is part of the **[unified-dl-list](https://github.com/kanemu/unified-dl-list)** monorepo:
 
-- [`remark-dl-list`](https://github.com/kanemu/unified-dl-list/tree/main/packages/remark-dl-list)
-- [`micromark-extension-dl-list`](https://github.com/kanemu/unified-dl-list/tree/main/packages/micromark-extension-dl-list)
-- [`mdast-util-dl-list`](https://github.com/kanemu/unified-dl-list/tree/main/packages/mdast-util-dl-list)
+- [`remark-dl-list`](https://www.npmjs.com/package/remark-dl-list)
+- [`micromark-extension-dl-list`](https://www.npmjs.com/package/micromark-extension-dl-list)
+- [`mdast-util-dl-list`](https://www.npmjs.com/package/mdast-util-dl-list)
 
 ## License
 

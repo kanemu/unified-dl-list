@@ -6,6 +6,9 @@ using `<dl>`, `<dt>`, and `<dd>` syntax.
 This plugin adds support for definition lists to remark and allows
 round-trip serialization back to markdown.
 
+For the detailed definition list syntax,
+→ **[docs/syntax.md](https://github.com/kanemu/unified-dl-list/blob/main/docs/syntax.md)**.
+
 ## Installation
 
 ```bash
@@ -117,16 +120,13 @@ is converted to:
 </dl>
 ```
 
-For the detailed definition list syntax,  
-→ **[docs/syntax.md](https://github.com/kanemu/unified-dl-list/blob/main/docs/syntax.md)**.
-
 ## Related packages
 
 This package is part of the **[unified-dl-list](https://github.com/kanemu/unified-dl-list)** monorepo:
 
-- [`micromark-extension-dl-list`](https://github.com/kanemu/unified-dl-list/tree/main/packages/micromark-extension-dl-list) – micromark syntax extension
-- [`mdast-util-dl-list`](https://github.com/kanemu/unified-dl-list/tree/main/packages/mdast-util-dl-list) – mdast parsing and serialization
-- [`hast-util-dl-list`](https://github.com/kanemu/unified-dl-list/tree/main/packages/hast-util-dl-list) – HTML handlers for remark-rehype
+- [`micromark-extension-dl-list`](https://www.npmjs.com/package/micromark-extension-dl-list) – micromark syntax extension
+- [`mdast-util-dl-list`](https://www.npmjs.com/package/mdast-util-dl-list) – mdast parsing and serialization
+- [`hast-util-dl-list`](https://www.npmjs.com/package/hast-util-dl-list) – HTML handlers for remark-rehype
 
 ## License
 
