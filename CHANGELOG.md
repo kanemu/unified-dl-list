@@ -11,8 +11,13 @@ This project uses a **single, fixed version** across all packages in the monorep
 - Add `syntax.d.ts` and `html.d.ts` to `micromark-extension-dl-list`.
 - Fix an incorrect import path for `micromark-extension-dl-list`.
 - Re-export `dlList` from `micromark-extension-dl-list` in `mdast-util-dl-list`.
-- Docs: improve README examples and usage notes.
-- Tests: add missing test cases.
+- Improve interoperability with other micromark/remark plugins:
+  - Allow `mdast-util-dl-list` to inherit external `extensions` and `mdastExtensions`
+    (e.g. GFM strikethrough) when re-parsing `dt` / `dd` contents.
+  - Update `remark-dl-list` to automatically pass already-registered remark extensions
+    to the internal re-parser.
+- Docs: improve README examples and usage notes, including plugin ordering.
+- Tests: add missing test cases and coverage for external plugin integration.
 
 ## 0.1.1 - 2026-01-14
 

@@ -130,9 +130,7 @@ const md = `\
       ~~orange~~
 `
 
-const file = processor.processSync(md)
-const html = toHtml(file.result)
-
+const html = processor.processSync(md).toString()
 console.log(html)
 ```
 
