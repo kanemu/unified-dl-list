@@ -67,6 +67,31 @@ test('from-markdown: multiple dd for one term', async () => {
     assert.deepEqual(actual, expected)
 })
 
+test('from-markdown: consecutive dt before a dd', async () => {
+    const md = `\
+: term1
+: term2
+    : desc
+`;
+
+    const actual = stripPositions(parse(md))
+    const expected = await readJson('consecutive_dt_before_a_dd.json')
+
+    assert.deepEqual(actual, expected)
+})
+
+test('from-markdown: dd indented with a tab (tab == ddIndent)', async () => {
+    const md = `\
+: term1
+\t: desc
+`;
+
+    const actual = stripPositions(parse(md))
+    const expected = await readJson('dd_indented_with_a_tab.json')
+
+    assert.deepEqual(actual, expected)
+})
+
 test('from-markdown: multiple items (dt resets item)', async () => {
     const md = `\
 : term1
@@ -229,7 +254,7 @@ test('from-markdown: does not start when ":" is indented 4+ columns', async () =
     assert.deepEqual(actual, expected)
 })
 
-test("from-markdown in blockquate", async () => {
+test("from-markdown: in blockquate", async () => {
     const md = `\
 > : term1
 >     : description1
@@ -239,6 +264,20 @@ test("from-markdown in blockquate", async () => {
 
     const actual = stripPositions(parse(md))
     const expected = await readJson('in_blockquate.json')
+
+    assert.deepEqual(actual, expected)
+})
+
+test('from-markdown: dd can nest ul', async () => {
+    const md = `\
+: fruits
+    : - apple
+      - grape
+      - orange
+`;
+    
+    const actual = stripPositions(parse(md))
+    const expected = await readJson('dd_can_nest_ul.json')
 
     assert.deepEqual(actual, expected)
 })

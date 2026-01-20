@@ -66,8 +66,6 @@ test('remark-dl-list: round-trip stringify does not insert extra blank lines', a
 
     const out = String(file)
 
-    console.log(JSON.stringify(out.split(/\n/)));
-
     const expected = [
         ': term1',
         '    : description1-1',

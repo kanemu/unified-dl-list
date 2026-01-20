@@ -62,6 +62,36 @@ test('handlers: multiple dd for one term', () => {
     equalOutput(render(md), html)
 })
 
+test('handlers: consecutive dt before a dd', () => {
+    const md = `\
+: term1
+: term2
+    : desc
+`;
+    const html = `\
+<dl>
+    <dt>term1</dt>
+    <dt>term2</dt>
+    <dd>desc</dd>
+</dl>
+`;
+    equalOutput(render(md), html)
+})
+
+test('handlers: dd indented with a tab (tab == ddIndent)', () => {
+    const md = `\
+: term1
+\t: desc
+`;
+    const html = `\
+<dl>
+    <dt>term1</dt>
+    <dd>desc</dd>
+</dl>
+`;
+    equalOutput(render(md), html)
+})
+
 test('handlers: multiple items (dt resets item)', () => {
     const md = `\
 : term1
@@ -372,6 +402,29 @@ test("handlers: in blockquate", () => {
         <dd>description2</dd>
     </dl>
 </blockquote>
+`;
+
+    equalOutput(render(md), html);
+})
+
+test('handlers: dd can nest ul', () => {
+    const md = `\
+: fruits
+    : - apple
+      - grape
+      - orange
+`;
+    const html = `\
+<dl>
+  <dt>fruits</dt>
+  <dd>
+    <ul>
+      <li>apple</li>
+      <li>grape</li>
+      <li>orange</li>
+    </ul>
+  </dd>
+</dl>
 `;
 
     equalOutput(render(md), html);

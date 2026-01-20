@@ -44,6 +44,33 @@ test('to-markdown: multiple dd for one term', async () => {
     assert.equal(md, result)
 })
 
+test('to-markdown: consecutive dt before a dd', async () => {
+    const md = `\
+: term1
+: term2
+    : desc
+`;
+
+    const tree = await readJson('consecutive_dt_before_a_dd.json')
+    const result = toMarkdown(tree, {
+        extensions: [dlListToMarkdown()]
+    })
+    assert.equal(md, result)
+})
+
+test('to-markdown: dd indented with a tab (tab == ddIndent)', async () => {
+    const md = `\
+: term1
+    : desc
+`;
+
+    const tree = await readJson('dd_indented_with_a_tab.json')
+    const result = toMarkdown(tree, {
+        extensions: [dlListToMarkdown()]
+    })
+    assert.equal(md, result)
+})
+
 test('to-markdown: multiple items (dt resets item)', async () => {
     const md = `\
 : term1
@@ -168,7 +195,6 @@ test('to-markdown: dd can nest dl (more complex structure)', async () => {
     const result = toMarkdown(tree, {
         extensions: [dlListToMarkdown()]
     })
-    console.log(result);
     assert.equal(md, result)
 })
 
@@ -210,6 +236,21 @@ test("to-markdown in blockquate", async () => {
 `;
 
     const tree = await readJson('in_blockquate.json')
+    const result = toMarkdown(tree, {
+        extensions: [dlListToMarkdown()]
+    })
+    assert.equal(md, result)
+})
+
+test('to-markdown: dd can nest ul', async () => {
+    const md = `\
+: fruits
+    : * apple
+      * grape
+      * orange
+`;
+
+    const tree = await readJson('dd_can_nest_ul.json')
     const result = toMarkdown(tree, {
         extensions: [dlListToMarkdown()]
     })

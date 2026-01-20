@@ -1,0 +1,85 @@
+{
+    "type": "root",
+    "children": [
+        {
+            "type": "definitionList",
+            "children": [
+                {
+                    "type": "definitionItem",
+                    "children": [
+                        {
+                            "type": "definitionTerm",
+                            "children": [
+                                {
+                                    "type": "text",
+                                    "value": "fruits"
+                                }
+                            ]
+                        },
+                        {
+                            "type": "definitionDescription",
+                            "children": [
+                                {
+                                    "type": "list",
+                                    "ordered": false,
+                                    "start": null,
+                                    "spread": false,
+                                    "children": [
+                                        {
+                                            "type": "listItem",
+                                            "spread": false,
+                                            "checked": null,
+                                            "children": [
+                                                {
+                                                    "type": "paragraph",
+                                                    "children": [
+                                                        {
+                                                            "type": "text",
+                                                            "value": "apple"
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "type": "listItem",
+                                            "spread": false,
+                                            "checked": null,
+                                            "children": [
+                                                {
+                                                    "type": "paragraph",
+                                                    "children": [
+                                                        {
+                                                            "type": "text",
+                                                            "value": "grape"
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "type": "listItem",
+                                            "spread": false,
+                                            "checked": null,
+                                            "children": [
+                                                {
+                                                    "type": "paragraph",
+                                                    "children": [
+                                                        {
+                                                            "type": "text",
+                                                            "value": "orange"
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

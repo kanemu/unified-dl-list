@@ -96,29 +96,6 @@ description1 line2</dd>
     equalOutput(render(md), html);
 })
 
-test('dd can nest ul', () => {
-    const md = `\
-: fruits
-    : - apple
-      - grape
-      - orange
-`;
-    const html = `\
-<dl>
-  <dt>fruits</dt>
-  <dd>
-    <ul>
-      <li>apple</li>
-      <li>grape</li>
-      <li>orange</li>
-    </ul>
-  </dd>
-</dl>
-`;
-
-    equalOutput(render(md), html);
-})
-
 test('dd can nest ol (ordered list)', () => {
     const md = `\
 : fruits
