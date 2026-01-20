@@ -1,4 +1,4 @@
-import { dlList } from "../../micromark-extension-dl-list/src";
+import { dlList } from "micromark-extension-dl-list";
 import { dlListFromMarkdown, dlListToMarkdown } from "mdast-util-dl-list";
 
 import type { Processor } from "unified";

@@ -1,5 +1,5 @@
 import { fromMarkdown, type CompileContext, type Extension, type Token } from 'mdast-util-from-markdown'
-import { dlList } from '../../micromark-extension-dl-list/src'
+import { dlList } from 'micromark-extension-dl-list'
 import type { DlListFromMarkdownOptions } from './types'
 import type { RootContent, PhrasingContent } from 'mdast'
 
