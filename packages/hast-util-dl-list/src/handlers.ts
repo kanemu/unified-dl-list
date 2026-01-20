@@ -1,12 +1,12 @@
 import { h } from 'hastscript'
 import type { Handlers } from 'mdast-util-to-hast'
-import type { HastState, MdastNode, HastElement } from './types'
+import type { HastState, MdastNode, HastElement, HastChild } from './types'
 
 /**
  * Create a <dl> element from a definitionList mdast node.
  */
 function createDl(state: HastState, node: MdastNode): HastElement {
-    const children = state.all(node as any) as any[]
+    const children = state.all(node as any) as HastChild[]
     const dl = h('dl', children) as HastElement
     state.applyData(node as any, dl)
     return dl
@@ -16,15 +16,15 @@ function createDl(state: HastState, node: MdastNode): HastElement {
  * definitionItem itself does not map to an HTML element.
  * It expands to dt + dd elements.
  */
-function createDlItem(state: HastState, node: MdastNode): HastElement[] {
-    return state.all(node as any) as HastElement[]
+function createDlItem(state: HastState, node: MdastNode): HastChild[] {
+    return state.all(node as any) as HastChild[]
 }
 
 /**
  * Create a <dt> element.
  */
 function createDt(state: HastState, node: MdastNode): HastElement {
-    const children = state.all(node as any) as any[]
+    const children = state.all(node as any) as HastChild[]
     const dt = h('dt', children) as HastElement
     state.applyData(node as any, dt)
     return dt
@@ -38,7 +38,7 @@ function createDt(state: HastState, node: MdastNode): HastElement {
  * - block children (paragraph/list/...) -> <dd><p>...</p>...</dd>
  */
 function createDd(state: HastState, node: MdastNode): HastElement {
-    const children = state.all(node as any) as any[]
+    const children = state.all(node as any) as HastChild[]
     const dd = h('dd', children) as HastElement
     state.applyData(node as any, dd)
     return dd
@@ -56,7 +56,7 @@ export function dlListHandlers(): Handlers {
         },
 
         definitionItem(state: HastState, node: MdastNode) {
-            return createDlItem(state, node)
+            return createDlItem(state, node) as any
         },
 
         definitionTerm(state: HastState, node: MdastNode) {
