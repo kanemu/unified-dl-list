@@ -58,7 +58,7 @@ Output:
 Still the same paragraph.
 ```
 
-## HTML output
+### HTML output
 
 This plugin **does not install `remark-rehype` automatically**.
 
@@ -87,6 +87,78 @@ const html = await unified()
 
 console.log(String(html))
 ```
+
+### Using `remark-dl-list` with GFM (strikethrough)
+
+When you use `remark-dl-list` together with other remark plugins (such as GFM),
+**register those plugins before `remark-dl-list`** so that definition list
+contents (`dt` / `dd`) can inherit their syntax during re-parsing.
+
+#### Markdown → HTML example (with strikethrough)
+
+```js
+import { unified } from 'unified'
+import remarkParse from 'remark-parse'
+import remarkGfm from 'remark-gfm'
+import remarkRehype from 'remark-rehype'
+import rehypeStringify from 'rehype-stringify'
+
+import { remarkDlList } from 'remark-dl-list'
+import { dlListHandlers } from 'hast-util-dl-list'
+
+const processor = unified()
+    .use(remarkParse)
+
+    // Register other plugins FIRST (e.g. GFM)
+    .use(remarkGfm)
+
+    // Then register remark-dl-list
+    .use(remarkDlList)
+
+    // Convert mdast → hast
+    .use(remarkRehype, {
+        handlers: {
+            ...dlListHandlers(),
+        },
+    })
+    .use(rehypeStringify)
+
+const md = `\
+: fruits
+    : **apple**
+      _grape_
+      ~~orange~~
+`
+
+const file = processor.processSync(md)
+const html = toHtml(file.result)
+
+console.log(html)
+```
+
+Output:
+
+```html
+<dl>
+  <dt>fruits</dt>
+  <dd>
+    <strong>apple</strong>
+    <em>grape</em>
+    <del>orange</del>
+  </dd>
+</dl>
+```
+
+#### Important notes
+
+* `remark-dl-list` **re-parses the contents of `dt` and `dd` internally**.
+* Therefore, any syntax extensions you want to use inside definition lists
+  (such as GFM strikethrough) **must already be registered** when
+  `remark-dl-list` runs.
+* Always place `remark-dl-list` **after** plugins like `remark-gfm`.
+
+> ✔ Correct order
+> `remark-parse → remark-gfm → remark-dl-list → remark-rehype`
 
 ## What this plugin does
 
@@ -127,6 +199,11 @@ This package is part of the **[unified-dl-list](https://github.com/kanemu/unifie
 - [`micromark-extension-dl-list`](https://www.npmjs.com/package/micromark-extension-dl-list) – micromark syntax extension
 - [`mdast-util-dl-list`](https://www.npmjs.com/package/mdast-util-dl-list) – mdast parsing and serialization
 - [`hast-util-dl-list`](https://www.npmjs.com/package/hast-util-dl-list) – HTML handlers for remark-rehype
+
+### Related projects
+
+- [`markdown-it-dl-list`](https://www.npmjs.com/package/markdown-it-dl-list)
+  A markdown-it plugin that provides the same colon-based definition list syntax.
 
 ## License
 

@@ -27,8 +27,7 @@ pnpm add mdast-util-dl-list
 
 ```js
 import { fromMarkdown } from 'mdast-util-from-markdown'
-import { dlListFromMarkdown } from 'mdast-util-dl-list'
-import { dlList } from 'micromark-extension-dl-list'
+import { dlList, dlListFromMarkdown } from 'mdast-util-dl-list'
 
 const tree = fromMarkdown(': term\n    : description\n', {
     extensions: [dlList()],
@@ -36,6 +35,9 @@ const tree = fromMarkdown(': term\n    : description\n', {
 })
 console.log(tree);
 ```
+
+- `dlList()` is a micromark syntax extension (re-exported from `micromark-extension-dl-list`).
+- `dlListFromMarkdown()` is an mdast extension for `mdast-util-from-markdown`.
 
 ### Serializing (to markdown)
 

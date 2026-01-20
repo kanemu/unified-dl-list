@@ -6,6 +6,14 @@ This project uses a **single, fixed version** across all packages in the monorep
 
 ---
 
+## 0.1.2 - 2026-01-20
+
+- Add `syntax.d.ts` and `html.d.ts` to `micromark-extension-dl-list`.
+- Fix an incorrect import path for `micromark-extension-dl-list`.
+- Re-export `dlList` from `micromark-extension-dl-list` in `mdast-util-dl-list`.
+- Docs: improve README examples and usage notes.
+- Tests: add missing test cases.
+
 ## 0.1.1 - 2026-01-14
 
 - Fixed nested definition lists when using the `::` shorthand.
