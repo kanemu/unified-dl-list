@@ -19,9 +19,11 @@
       "import": "./src/index.js"
     },
     "./syntax.js": {
+      "types": "./src/syntax.d.ts",
       "import": "./src/syntax.js"
     },
     "./html.js": {
+      "types": "./src/html.d.ts",
       "import": "./src/html.js"
     }
   },
