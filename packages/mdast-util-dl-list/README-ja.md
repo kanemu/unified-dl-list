@@ -27,8 +27,7 @@ pnpm add mdast-util-dl-list
 
 ```js
 import { fromMarkdown } from 'mdast-util-from-markdown'
-import { dlListFromMarkdown } from 'mdast-util-dl-list'
-import { dlList } from 'micromark-extension-dl-list'
+import { dlList, dlListFromMarkdown } from 'mdast-util-dl-list'
 
 const tree = fromMarkdown(': term\n    : description\n', {
     extensions: [dlList()],
@@ -49,6 +48,9 @@ const markdown = toMarkdown(tree, {
 })
 console.log(markdown);
 ```
+
+- `dlList()` は micromark 用の構文拡張です（`micromark-extension-dl-list` から再エクスポートしています）。
+- `dlListFromMarkdown()` は `mdast-util-from-markdown` 用の mdast 拡張です。
 
 ## このパッケージがすること
 

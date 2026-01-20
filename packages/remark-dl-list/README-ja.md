@@ -58,7 +58,7 @@ console.log(String(file))
 Still the same paragraph.
 ```
 
-## HTML 出力
+### HTML 出力
 
 このプラグインは **`remark-rehype` を自動ではインストールしません**。
 
@@ -86,6 +86,68 @@ const html = await unified()
   `)
 
 console.log(String(html))
+```
+
+### `remark-dl-list` を GFM（取り消し線）と併用する
+
+`remark-dl-list` を他の remark プラグイン（例: GFM）と一緒に使う場合は、
+**それらのプラグインを `remark-dl-list` より前に登録してください**。
+
+これは、`remark-dl-list` が **`dt` / `dd` の中身を内部で再パースする**ためです。
+
+#### Markdown → HTML の例（取り消し線あり）
+
+```js
+import { unified } from 'unified'
+import remarkParse from 'remark-parse'
+import remarkGfm from 'remark-gfm'
+import remarkRehype from 'remark-rehype'
+import rehypeStringify from 'rehype-stringify'
+
+import { remarkDlList } from 'remark-dl-list'
+import { dlListHandlers } from 'hast-util-dl-list'
+
+const processor = unified()
+    .use(remarkParse)
+
+    // 他のプラグイン（GFM など）を先に登録
+    .use(remarkGfm)
+
+    // その後で remark-dl-list を登録
+    .use(remarkDlList)
+
+    // mdast → hast
+    .use(remarkRehype, {
+        handlers: {
+            ...dlListHandlers(),
+        },
+    })
+    .use(rehypeStringify)
+
+const md = `\
+: fruits
+    : **apple**
+      _grape_
+      ~~orange~~
+`
+
+const file = processor.processSync(md)
+const html = toHtml(file.result)
+
+console.log(html)
+```
+
+出力:
+
+```html
+<dl>
+  <dt>fruits</dt>
+  <dd>
+    <strong>apple</strong>
+    <em>grape</em>
+    <del>orange</del>
+  </dd>
+</dl>
 ```
 
 ## このプラグインがすること
@@ -127,6 +189,11 @@ console.log(String(html))
 * [`micromark-extension-dl-list`](https://www.npmjs.com/package/micromark-extension-dl-list) – micromark 用の構文拡張
 * [`mdast-util-dl-list`](https://www.npmjs.com/package/mdast-util-dl-list) – mdast のパースとシリアライズ
 * [`hast-util-dl-list`](https://www.npmjs.com/package/hast-util-dl-list) – remark-rehype 用の HTML ハンドラ
+
+### 関連プロジェクト
+
+- [`markdown-it-dl-list`](https://www.npmjs.com/package/markdown-it-dl-list)
+  同じコロン記法の説明リスト構文を提供する markdown-it 用プラグインです。
 
 ## ライセンス
 
