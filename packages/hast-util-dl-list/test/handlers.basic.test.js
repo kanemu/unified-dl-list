@@ -8,6 +8,9 @@ import { dlList } from '../../micromark-extension-dl-list/src/syntax.js'
 import { dlListFromMarkdown } from '../../mdast-util-dl-list/dist/index.js'
 import { dlListHandlers } from "../dist/index.js";
 
+import { gfmStrikethrough } from 'micromark-extension-gfm-strikethrough'
+import { gfmStrikethroughFromMarkdown } from 'mdast-util-gfm-strikethrough'
+
 function render(md) {
     const mdast = fromMarkdown(md, {
         extensions: [dlList()],
@@ -488,4 +491,64 @@ description1-2</dd>
 `;
 
     equalOutput(render(md), html);
+})
+
+test('handlers: dd reparsing without gfm (strikethrough stays as text)', () => {
+    const md = `\
+: fruits
+    : **apple**
+      _grape_
+      ~~orange~~
+`;
+    const html = `\
+<dl>
+    <dt>fruits</dt>
+    <dd><strong>apple</strong><em>grape</em>
+~~orange~~</dd>
+</dl>
+`;
+
+    equalOutput(render(md), html);
+})
+
+test('handlers: dd reparsing with gfm strikethrough (~~text~~ becomes delete)', () => {
+    const md = `\
+: fruits
+    : **apple**
+      _grape_
+      ~~orange~~
+`;
+    const html = `\
+<dl>
+    <dt>fruits</dt>
+    <dd><strong>apple</strong>
+        <em>grape</em>
+        <del>orange</del>
+    </dd>
+</dl>
+`;
+
+    // 1) dlListFromMarkdown に「再パース時にも使う拡張」を渡す
+    const dlMdast = dlListFromMarkdown({
+        extensions: [gfmStrikethrough()],
+        mdastExtensions: [gfmStrikethroughFromMarkdown()],
+    })
+
+    const mdast = fromMarkdown(md, {
+        // 2) 外側のパースにも当然必要
+        extensions: [
+            gfmStrikethrough(),
+            dlList(),
+        ],
+        mdastExtensions: [
+            gfmStrikethroughFromMarkdown(),
+            dlMdast,
+        ]
+    });
+
+    const hast = toHast(mdast, {
+        handlers: { ...dlListHandlers() }
+    });
+
+    equalOutput(toHtml(hast), html);
 })

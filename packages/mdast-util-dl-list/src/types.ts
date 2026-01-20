@@ -1,4 +1,5 @@
 import type { Data, PhrasingContent, RootContent } from 'mdast'
+import type { Extension } from 'mdast-util-from-markdown'
 import type { Position } from 'unist'
 
 export type DlListFromMarkdownOptions = {
@@ -9,6 +10,22 @@ export type DlListFromMarkdownOptions = {
      * Default: 8
      */
     maxDepth?: number
+
+    /**
+     * Extra micromark syntax extensions to apply when re-parsing dt/dd content.
+     * Example: gfmStrikethrough()
+     *
+     * NOTE: dl-list itself will be appended internally.
+     */
+    extensions?: Extension[]
+
+    /**
+     * Extra mdast extensions to apply when re-parsing dt/dd content.
+     * Example: gfmStrikethroughFromMarkdown()
+     *
+     * NOTE: dl-list mdast extension will be appended internally.
+     */
+    mdastExtensions?: Extension[]
 }
 
 /**

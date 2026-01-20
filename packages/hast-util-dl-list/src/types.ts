@@ -1,31 +1,28 @@
-import type { Element, Properties } from 'hast'
+import type { Element, Text, Comment, Properties } from 'hast'
 import type { State } from 'mdast-util-to-hast'
 import type { Data } from 'mdast'
+import type { Node, Parent } from 'unist'
 
-/**
- * Context object passed to each handler.
- * This is the same `state` object provided by mdast-util-to-hast.
- */
 export type HastState = State
 
 /**
- * Minimal shape of mdast nodes this package cares about.
+ * hast child nodes produced by mdast-util-to-hast.
  *
- * - `data.hName`, `data.hProperties`, `data.hChildren` are respected by `state.applyData`.
- * - Keep loose: mdast is extensible and downstream plugins may attach fields.
+ * Equivalent to hast.Content, but spelled out to avoid deprecated alias.
  */
-export interface MdastNode {
-    type: string
-    children?: MdastNode[]
-    data?: Data & {
-        hName?: string
-        hProperties?: Properties
-        hChildren?: MdastNode[]
-        [key: string]: unknown
-    }
-}
+export type HastChild =
+    | Element
+    | Text
+    | Comment
 
-/**
- * Resulting hast Element produced by handlers.
- */
 export type HastElement = Element
+
+export type MdastNode = Node &
+    Partial<Parent> & {
+        data?: (Data & {
+            hName?: string
+            hProperties?: Properties
+            hChildren?: unknown[]
+            [key: string]: unknown
+        }) | null
+    }

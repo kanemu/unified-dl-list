@@ -49,7 +49,21 @@ export function remarkDlList(this: Processor): void {
         (data.toMarkdownExtensions as ToMarkdownExtension[] | undefined) ??
         ((data.toMarkdownExtensions = []) as ToMarkdownExtension[]);
 
+    // Capture “other” extensions that are already registered at this moment.
+    // These will be inherited by dd/dt reparse inside mdast-util-dl-list.
+    const inheritedMicromark = micromarkExtensions.slice();
+    const inheritedFromMd = fromMarkdownExtensions.slice();
+
+    // Register dl-list itself
     micromarkExtensions.push(dlList());
-    fromMarkdownExtensions.push(dlListFromMarkdown());
+
+    // IMPORTANT: pass inherited extensions to dlListFromMarkdown so dd reparse can see them
+    fromMarkdownExtensions.push(
+        dlListFromMarkdown({
+            extensions: inheritedMicromark as any,
+            mdastExtensions: inheritedFromMd as any,
+        })
+    );
+
     toMarkdownExtensions.push(dlListToMarkdown());
 }
