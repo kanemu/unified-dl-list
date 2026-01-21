@@ -6,6 +6,24 @@ using `<dl>`, `<dt>`, and `<dd>` syntax.
 This plugin adds support for definition lists to remark and allows
 round-trip serialization back to markdown.
 
+Syntax:
+
+```md
+: term
+    : description
+    : another description
+```
+
+is converted to:
+
+```html
+<dl>
+  <dt>term</dt>
+  <dd>description</dd>
+  <dd>another description</dd>
+</dl>
+```
+
 For the detailed definition list syntax,
 → **[docs/syntax.md](https://github.com/kanemu/unified-dl-list/blob/main/docs/syntax.md)**.
 
@@ -29,7 +47,7 @@ pnpm add remark-dl-list
 import { unified } from 'unified'
 import remarkParse from 'remark-parse'
 import remarkStringify from 'remark-stringify'
-import { remarkDlList } from 'remark-dl-list'
+import remarkDlList from 'remark-dl-list'
 
 const md = `
 : term1
@@ -70,7 +88,7 @@ import { unified } from 'unified'
 import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
 import rehypeStringify from 'rehype-stringify'
-import { remarkDlList } from 'remark-dl-list'
+import remarkDlList from 'remark-dl-list'
 import { dlListHandlers } from 'hast-util-dl-list'
 
 const html = await unified()
@@ -103,7 +121,7 @@ import remarkGfm from 'remark-gfm'
 import remarkRehype from 'remark-rehype'
 import rehypeStringify from 'rehype-stringify'
 
-import { remarkDlList } from 'remark-dl-list'
+import remarkDlList from 'remark-dl-list'
 import { dlListHandlers } from 'hast-util-dl-list'
 
 const processor = unified()
@@ -171,24 +189,6 @@ Output:
 * Does **not** install `remark-rehype`
 * Does **not** generate HTML by itself
 * Does **not** change normal markdown behavior when no dl syntax is present
-
-## Syntax
-
-```md
-: term
-    : description
-    : another description
-```
-
-is converted to:
-
-```html
-<dl>
-  <dt>term</dt>
-  <dd>description</dd>
-  <dd>another description</dd>
-</dl>
-```
 
 ## Related packages
 

@@ -6,6 +6,24 @@
 このプラグインは remark に定義リストのサポートを追加し、
 Markdown へのラウンドトリップ（再シリアライズ）を可能にします。
 
+構文:
+
+```md
+: term
+    : description
+    : another description
+```
+
+は次のように変換されます。
+
+```html
+<dl>
+  <dt>term</dt>
+  <dd>description</dd>
+  <dd>another description</dd>
+</dl>
+```
+
 定義リストの詳細な構文については、
 → **[docs/syntax-ja.md](https://github.com/kanemu/unified-dl-list/blob/main/docs/syntax-ja.md)** を参照してください。
 
@@ -29,7 +47,7 @@ pnpm add remark-dl-list
 import { unified } from 'unified'
 import remarkParse from 'remark-parse'
 import remarkStringify from 'remark-stringify'
-import { remarkDlList } from 'remark-dl-list'
+import remarkDlList from 'remark-dl-list'
 
 const md = `
 : term1
@@ -70,7 +88,7 @@ import { unified } from 'unified'
 import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
 import rehypeStringify from 'rehype-stringify'
-import { remarkDlList } from 'remark-dl-list'
+import remarkDlList from 'remark-dl-list'
 import { dlListHandlers } from 'hast-util-dl-list'
 
 const html = await unified()
@@ -104,7 +122,7 @@ import remarkGfm from 'remark-gfm'
 import remarkRehype from 'remark-rehype'
 import rehypeStringify from 'rehype-stringify'
 
-import { remarkDlList } from 'remark-dl-list'
+import remarkDlList from 'remark-dl-list'
 import { dlListHandlers } from 'hast-util-dl-list'
 
 const processor = unified()
@@ -161,24 +179,6 @@ console.log(html)
 * `remark-rehype` を自動的にインストールしません
 * 単体で HTML を生成しません
 * 定義リスト構文が存在しない場合の通常の Markdown の挙動は変更しません
-
-## 構文
-
-```md
-: term
-    : description
-    : another description
-```
-
-は次のように変換されます。
-
-```html
-<dl>
-  <dt>term</dt>
-  <dd>description</dd>
-  <dd>another description</dd>
-</dl>
-```
 
 ## 関連パッケージ
 

@@ -1,5 +1,7 @@
 # unified-dl-list
 
+> 📘 **日本語版はこちら** → [README-ja.md](./README-ja.md)
+
 A monorepo that provides **colon-based definition list support**
 for the unified / remark / rehype ecosystem.
 

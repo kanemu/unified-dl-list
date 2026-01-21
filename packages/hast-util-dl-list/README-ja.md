@@ -28,7 +28,7 @@ import { unified } from 'unified'
 import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
 import rehypeStringify from 'rehype-stringify'
-import { remarkDlList } from 'remark-dl-list'
+import remarkDlList from 'remark-dl-list'
 import { dlListHandlers } from 'hast-util-dl-list'
 
 const html = await unified()

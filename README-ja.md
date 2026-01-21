@@ -1,5 +1,7 @@
 # unified-dl-list
 
+> 📕 **English version** → [README.md](./README.md)
+
 unified / remark / rehype エコシステム向けに
 **コロン記法による定義リスト**を提供するモノレポです。
 
