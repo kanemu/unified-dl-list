@@ -1,5 +1,7 @@
 # Definition List Syntax
 
+> 📘 **日本語版はこちら** → [syntax-ja.md](./syntax-ja.md)
+
 This document describes the colon-based definition list syntax
 supported by the **unified-dl-list** packages.
 

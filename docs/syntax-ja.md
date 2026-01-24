@@ -1,5 +1,7 @@
 # 定義リスト構文（Definition List Syntax）
 
+> 📕 **English version** → [syntax.md](./syntax.md)
+
 このドキュメントは、 **unified-dl-list** パッケージ群がサポートする
 コロン記法による定義リスト構文を説明します。
 
