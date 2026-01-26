@@ -67,3 +67,5 @@ export function remarkDlList(this: Processor): void {
 
     toMarkdownExtensions.push(dlListToMarkdown());
 }
+
+export default remarkDlList
