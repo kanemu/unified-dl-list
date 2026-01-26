@@ -6,6 +6,12 @@ This project uses a **single, fixed version** across all packages in the monorep
 
 ---
 
+## 0.1.3 - 2026-01-26
+
+### remark-dl-list
+
+- Added a default export for the remark plugin (the existing named export remains supported).
+
 ## 0.1.2 - 2026-01-20
 
 - Add `syntax.d.ts` and `html.d.ts` to `micromark-extension-dl-list`.
