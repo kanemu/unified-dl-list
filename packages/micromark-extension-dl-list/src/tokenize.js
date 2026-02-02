@@ -337,11 +337,6 @@ export function tokenizeDlList(effects, ok, nok) {
         // @ts-ignore
         t._dlIndent = ddIndent
 
-        // `::` shorthand: dd marker ':' immediately followed by another ':'
-        // with NO spaces in between.
-        // @ts-ignore
-        t._dlFirstLineOffset = (!ddMarkerHadSpace && code === codes.colon ? 1 : 0)
-
         return descContainerContent(code)
     }
 

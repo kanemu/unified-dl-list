@@ -179,12 +179,7 @@ export function dlListHtml(options = {}) {
 
             dlDescContainer(token) {
                 let raw = this.sliceSerialize(token)
-                // For `::` shorthand, tokenizer sets `_dlFirstLineOffset = 1`
-                // to compensate the extra ':' column so nested dl aligns.
-                raw = deindentByColumns(
-                    raw,
-                    (token._dlIndent || 0) + (token._dlFirstLineOffset || 0)
-                )
+                raw = deindentByColumns(raw, token._dlIndent || 0)
                 raw = normalizeFlatListIndentInDd(raw)
                 raw = normalizeNestedDlIndentInDd(raw)
 
