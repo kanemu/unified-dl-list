@@ -6,6 +6,14 @@ This project uses a **single, fixed version** across all packages in the monorep
 
 ---
 
+## 0.1.4 - 2026-02-02
+
+**⚠️ Breaking changes**
+
+- Removed support for the `::` shorthand inside definition descriptions (`dd`) for starting nested definition lists, **to avoid conflicts with other Markdown syntaxes**.
+- Nested definition lists must now be written using the standard syntax with `:` followed by whitespace.
+- `::` without whitespace is no longer treated as a definition list marker and is parsed as plain text.
+
 ## 0.1.3 - 2026-01-26
 
 ### remark-dl-list

@@ -1,6 +1,6 @@
 {
   "name": "micromark-extension-dl-list",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "A micromark extension that adds colon-based definition list (<dl>, <dt>, <dd>) support with CommonMark-compatible parsing rules.",
   "type": "module",
   "sideEffects": false,
